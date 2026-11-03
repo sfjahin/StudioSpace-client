@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import type { Swiper as SwiperClass } from "swiper";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Star } from "lucide-react";
 import { slides } from "./banner-slides";
+import Link from "next/link";
 
 // Swiper runs `new Date()` during construction (Autoplay module), which fails
 // Next 16 cacheComponents prerendering — load it client-only instead.
@@ -53,12 +54,12 @@ export default function Banner() {
                 Find your space
                 <ArrowUpRight className="h-4 w-4" />
               </a>
-              <a
-                href="#"
+              <Link
+                href="/add-studio"
                 className="rounded-lg bg-white px-6 py-3.5 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100"
               >
                 List your studio
-              </a>
+              </Link>
             </div>
           </div>
 
