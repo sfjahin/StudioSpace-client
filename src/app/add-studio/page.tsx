@@ -9,15 +9,7 @@ import {
     formatMoney,
     priceBreakdown,
 } from "@/lib/api";
-
-/* ----------------------------- Auth (replace) ----------------------------- */
-
-type AuthUser = { name: string; email: string };
-
-function useAuth(): { user: AuthUser | null; loading: boolean } {
-    // TODO: swap for your auth provider, e.g. `const { data, status } = useSession()`
-    return { user: { name: "Maya Chen", email: "maya@example.com" }, loading: false };
-}
+import { useAuth } from "@/lib/auth";
 
 /* --------------------------------- Data ---------------------------------- */
 

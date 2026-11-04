@@ -34,6 +34,7 @@ import {
     squareFeet,
 } from "@/lib/studio-detail";
 import BookingCard from "@/components/BookingCard";
+import EditStudioButton from "@/components/EditStudioButton";
 import ReviewsSection from "@/components/ReviewsSection";
 import StudioGallery from "@/components/StudioGallery";
 
@@ -152,32 +153,37 @@ async function StudioDetail({ id }: { id: string }) {
 
             {/* Header */}
             <header>
-                <p className="inline-block rounded-md bg-[#FFF0E9] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#FF5A1F]">
-                    Guest favorite
-                </p>
-                <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-                    {studio.title}
-                </h1>
-                <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px] text-[#4d4a45]">
-                    <span className="flex items-center gap-1.5 font-medium text-[#1b1b1a]">
-                        <span aria-hidden>★</span>
-                        {rating.toFixed(2)}
-                        <span className="font-normal text-[#7a776f]">
-                            ({reviews.length} reviews)
-                        </span>
-                    </span>
-                    <span className="text-[#c9c5bc]" aria-hidden>
-                        ·
-                    </span>
-                    <span>{studio.address}</span>
-                    <span className="text-[#c9c5bc]" aria-hidden>
-                        ·
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                        <CircleCheck className="size-4 text-[#FF5A1F]" aria-hidden />
-                        Verified space
-                    </span>
-                </p>
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="min-w-0">
+                        <p className="inline-block rounded-md bg-[#FFF0E9] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#FF5A1F]">
+                            Guest favorite
+                        </p>
+                        <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+                            {studio.title}
+                        </h1>
+                        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px] text-[#4d4a45]">
+                            <span className="flex items-center gap-1.5 font-medium text-[#1b1b1a]">
+                                <span aria-hidden>★</span>
+                                {rating.toFixed(2)}
+                                <span className="font-normal text-[#7a776f]">
+                                    ({reviews.length} reviews)
+                                </span>
+                            </span>
+                            <span className="text-[#c9c5bc]" aria-hidden>
+                                ·
+                            </span>
+                            <span>{studio.address}</span>
+                            <span className="text-[#c9c5bc]" aria-hidden>
+                                ·
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                                <CircleCheck className="size-4 text-[#FF5A1F]" aria-hidden />
+                                Verified space
+                            </span>
+                        </p>
+                    </div>
+                    <EditStudioButton studio={studio} />
+                </div>
             </header>
 
             {/* Gallery */}

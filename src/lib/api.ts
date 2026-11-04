@@ -94,6 +94,14 @@ export function getStudio(id: string): Promise<Studio> {
   return request<Studio>(`/studios/${encodeURIComponent(id)}`);
 }
 
+/** Replace an existing listing's editable fields (host info stays untouched). */
+export function updateStudio(id: string, input: StudioInput): Promise<Studio> {
+  return request<Studio>(`/studios/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
 export function priceBreakdown(hourlyRate: number, hours = 4) {
   const subtotal = hourlyRate * hours;
   const fee = subtotal * SERVICE_FEE_RATE;
