@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Pencil, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import {
     ApiError,
     deleteStudio,
@@ -217,18 +217,18 @@ export default function MyListingsPage() {
         if (!loading && !user) router.replace("/login?next=/my-listings");
     }, [loading, user, router]);
 
-    // Load this owner's listings (owner email match — stored as hostEmail).
+    // Load this owner's listings: the server filters by ownerEmail, and we double-check here.
     useEffect(() => {
         if (!user) return;
         let cancelled = false;
 
-        listStudios()
+        listStudios({ ownerEmail: user.email })
             .then((all) => {
                 if (cancelled) return;
                 const mine = all.filter(
                     (s) =>
-                        !!s.hostEmail &&
-                        s.hostEmail.toLowerCase() === user.email.toLowerCase()
+                        !!s.ownerEmail &&
+                        s.ownerEmail.toLowerCase() === user.email.toLowerCase()
                 );
                 setStudios(mine);
             })

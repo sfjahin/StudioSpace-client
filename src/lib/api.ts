@@ -23,8 +23,9 @@ export type StudioInput = {
   imageUrl: string;
   amenities: string[];
   overview: string;
-  hostName?: string;
-  hostEmail?: string;
+  /** Set once, on create. The server never lets an update change the owner. */
+  ownerName?: string;
+  ownerEmail?: string;
 };
 
 export type Studio = StudioInput & {
@@ -35,11 +36,54 @@ export type Studio = StudioInput & {
 /** Field-level validation errors keyed by studio field name. */
 export type FieldErrors = Partial<Record<keyof StudioInput, string>>;
 
+/* -------------------------------- Bookings -------------------------------- */
+
+export const BOOKING_STATUSES = ["Pending", "Confirmed", "Completed", "Cancelled"] as const;
+export type BookingStatus = (typeof BOOKING_STATUSES)[number];
+
+export type BookingInput = {
+  studioId: string;
+  userName: string;
+  userEmail: string;
+  /** YYYY-MM-DD */
+  date: string;
+  /** e.g. "10:00 AM" */
+  startTime: string;
+  endTime: string;
+  crewSize: number;
+  note?: string;
+};
+
+export type Booking = {
+  id: string;
+  studioId: string;
+  /** Snapshot of the studio at booking time, so the booking still reads well if the listing changes. */
+  studioTitle: string;
+  studioImage: string;
+  studioAddress: string;
+  studioCategory: string;
+  ownerEmail: string;
+  userName: string;
+  userEmail: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  hours: number;
+  crewSize: number;
+  note: string;
+  hourlyRate: number;
+  subtotal: number;
+  serviceFee: number;
+  total: number;
+  status: BookingStatus;
+  createdAt: string;
+};
+
 export class ApiError extends Error {
   status: number;
-  fields: FieldErrors;
+  fields: Record<string, string>;
 
-  constructor(message: string, status: number, fields: FieldErrors = {}) {
+  constructor(message: string, status: number, fields: Record<string, string> = {}) {
     super(message);
     this.name = "ApiError";
     this.status = status;
@@ -47,7 +91,7 @@ export class ApiError extends Error {
   }
 }
 
-type ErrorBody = { message?: string; fields?: FieldErrors };
+type ErrorBody = { message?: string; fields?: Record<string, string> };
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
@@ -85,8 +129,10 @@ export function createStudio(input: StudioInput): Promise<Studio> {
   });
 }
 
-export async function listStudios(): Promise<Studio[]> {
-  const data = await request<{ studios: Studio[] }>("/studios");
+/** List studios. Pass `ownerEmail` to get only that owner's listings. */
+export async function listStudios(opts: { ownerEmail?: string } = {}): Promise<Studio[]> {
+  const query = opts.ownerEmail ? `?ownerEmail=${encodeURIComponent(opts.ownerEmail)}` : "";
+  const data = await request<{ studios: Studio[] }>(`/studios${query}`);
   return data.studios ?? [];
 }
 
@@ -110,6 +156,30 @@ export function deleteStudio(id: string): Promise<{ id: string; deleted: boolean
   );
 }
 
+/** Create a booking. The server prices it and always starts it as "Pending". */
+export function createBooking(input: BookingInput): Promise<Booking> {
+  return request<Booking>("/bookings", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+/** Every booking made by this user, newest first. */
+export async function listMyBookings(email: string): Promise<Booking[]> {
+  const data = await request<{ bookings: Booking[] }>(
+    `/bookings?email=${encodeURIComponent(email)}`
+  );
+  return data.bookings ?? [];
+}
+
+/** Cancel one of the user's own bookings (only allowed while it is Pending). */
+export function cancelBooking(id: string, userEmail: string): Promise<Booking> {
+  return request<Booking>(`/bookings/${encodeURIComponent(id)}/cancel`, {
+    method: "PATCH",
+    body: JSON.stringify({ userEmail }),
+  });
+}
+
 export function priceBreakdown(hourlyRate: number, hours = 4) {
   const subtotal = hourlyRate * hours;
   const fee = subtotal * SERVICE_FEE_RATE;
@@ -118,4 +188,16 @@ export function priceBreakdown(hourlyRate: number, hours = 4) {
 
 export function formatMoney(n: number) {
   return `$${n.toFixed(2).replace(/\.00$/, "")}`;
+}
+
+/** "2026-11-09" -> "Mon, Nov 9, 2026" (parsed as a local date so it never shifts a day). */
+export function formatBookingDate(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }

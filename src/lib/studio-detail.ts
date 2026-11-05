@@ -158,7 +158,7 @@ export type HostDetails = {
 };
 
 export function buildHost(studio: Studio): HostDetails {
-    const name = studio.hostName?.trim() || "StudioSpace Host";
+    const name = studio.ownerName?.trim() || "StudioSpace Host";
     const initials = name
         .split(/\s+/)
         .slice(0, 2)
@@ -179,7 +179,7 @@ export function buildHost(studio: Studio): HostDetails {
         line: `${studio.category} host and local creative. Hosting since ${since}.`,
         responseRate: 92 + (seed % 8),
         replyTime: replyTimes[seed % replyTimes.length],
-        email: studio.hostEmail,
+        email: studio.ownerEmail,
     };
 }
 

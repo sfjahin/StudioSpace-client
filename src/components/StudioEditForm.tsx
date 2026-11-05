@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import {
     ApiError,
     CATEGORIES,
@@ -12,6 +12,7 @@ import {
     type Studio,
 } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import ImageUploadField from "./ImageUploadField";
 
 /* --------------------------------- Data ---------------------------------- */
 
@@ -135,7 +136,6 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
     const [errors, setErrors] = useState<FieldErrors>({});
     const [submitting, setSubmitting] = useState(false);
     const [status, setStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
-    const [imageFailed, setImageFailed] = useState(false);
 
     const set = <K extends keyof FormState>(key: K, value: FormState[K]) => {
         setForm((f) => ({ ...f, [key]: value }));
@@ -157,8 +157,8 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
     const example = rate > 0 ? priceBreakdown(rate) : null;
 
     // Host info is read-only: prefer what's on the listing, fall back to the account.
-    const hostName = studio.hostName || user?.name || "";
-    const hostEmail = studio.hostEmail || user?.email || "";
+    const ownerName = studio.ownerName || user?.name || "";
+    const ownerEmail = studio.ownerEmail || user?.email || "";
 
     const validate = () => {
         const e: FieldErrors = {};
@@ -342,38 +342,12 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                 title="04 / Let your space speak"
                 description="Lead with a wide, naturally lit view of your space."
             >
-                <Field label="Image URL" required error={errors.imageUrl}>
-                    <input
-                        type="url"
-                        className={inputCls}
-                        value={form.imageUrl}
-                        onChange={(e) => {
-                            set("imageUrl", e.target.value);
-                            setImageFailed(false);
-                        }}
-                        placeholder="https://your-site.com/studio-photo.jpg"
-                    />
-                </Field>
-                {form.imageUrl.trim() && (
-                    <div className="overflow-hidden rounded-xl border border-[#e7e3db] bg-[#f0ece4]">
-                        {imageFailed ? (
-                            <p className="px-4 py-10 text-center text-xs text-[#7a776f]">
-                                We couldn&apos;t load that image. Check the link and try again.
-                            </p>
-                        ) : (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                                src={form.imageUrl}
-                                alt="Studio cover preview"
-                                className="h-48 w-full object-cover"
-                                onError={() => setImageFailed(true)}
-                            />
-                        )}
-                        <p className="border-t border-[#e7e3db] bg-white px-3 py-2 text-[11px] text-[#7a776f]">
-                            Cover photo preview
-                        </p>
-                    </div>
-                )}
+                <ImageUploadField
+                    value={form.imageUrl}
+                    onChange={(url) => set("imageUrl", url)}
+                    error={errors.imageUrl}
+                    previewClassName="h-48"
+                />
             </Section>
 
             {/* 05 Amenities */}
@@ -437,7 +411,7 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                         <span className="block text-[11px] font-medium text-[#6f6c66]">Host name</span>
                         <input
                             readOnly
-                            value={hostName}
+                            value={ownerName}
                             className={`${inputCls} cursor-not-allowed text-[#6f6c66]`}
                         />
                     </label>
@@ -445,7 +419,7 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                         <span className="block text-[11px] font-medium text-[#6f6c66]">Host email</span>
                         <input
                             readOnly
-                            value={hostEmail}
+                            value={ownerEmail}
                             className={`${inputCls} cursor-not-allowed text-[#6f6c66]`}
                         />
                     </label>

@@ -4,7 +4,7 @@ import { useTransition, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Dialog } from "@base-ui/react/dialog";
 import { Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import type { Studio } from "@/lib/api";
 import { deleteStudioAction, type DeleteStudioState } from "@/app/studios/[id]/actions";
 

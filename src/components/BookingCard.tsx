@@ -1,9 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Dialog } from "@base-ui/react/dialog";
 import { ArrowRight, CalendarDays, CheckCircle2, Clock, ShieldCheck, Users } from "lucide-react";
-import { formatMoney, SERVICE_FEE_RATE, type Studio } from "@/lib/api";
+import { toast } from "sonner";
+import {
+    ApiError,
+    createBooking,
+    formatBookingDate,
+    formatMoney,
+    SERVICE_FEE_RATE,
+    type Studio,
+} from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import { cn } from "cn";
 
 const MIN_HOURS = 2;
@@ -46,12 +56,16 @@ type Props = {
  * and a "Book Workspace Now" button that opens the booking modal.
  */
 export default function BookingCard({ studio }: Props) {
+    const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState("");
     const [start, setStart] = useState("10:00 AM");
     const [end, setEnd] = useState("02:00 PM");
     const [crew, setCrew] = useState(Math.min(6, studio.maxCapacity));
+    const [note, setNote] = useState("");
     const [confirmed, setConfirmed] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const hours = Math.max((toMinutes(end) - toMinutes(start)) / 60, MIN_HOURS);
 
@@ -61,11 +75,43 @@ export default function BookingCard({ studio }: Props) {
     const fee = subtotal * SERVICE_FEE_RATE;
     const total = subtotal + fee;
 
-    const canBook = Boolean(date) && !invalidRange;
+    const canBook = Boolean(date) && !invalidRange && !!user;
 
     const reset = () => {
         setConfirmed(false);
         setDate("");
+        setNote("");
+        setError(null);
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!canBook || !user) return;
+
+        setError(null);
+        setSubmitting(true);
+        try {
+            await createBooking({
+                studioId: studio.id,
+                userName: user.name,
+                userEmail: user.email,
+                date,
+                startTime: start,
+                endTime: end,
+                crewSize: crew,
+                note: note.trim(),
+            });
+            toast.success("Booking request sent. Status: Pending.");
+            setConfirmed(true);
+        } catch (err) {
+            setError(
+                err instanceof ApiError
+                    ? err.message
+                    : "We couldn't send your booking request. Please try again."
+            );
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const closeAndReset = (next: boolean) => {
@@ -157,6 +203,7 @@ export default function BookingCard({ studio }: Props) {
                     </p>
                 )}
 
+
                 <dl className="mt-5 space-y-2.5 text-sm">
                     <div className="flex justify-between">
                         <dt className="text-[#7a776f]">
@@ -225,17 +272,26 @@ export default function BookingCard({ studio }: Props) {
                                     Request sent to the host
                                 </Dialog.Title>
                                 <Dialog.Description className="mt-2 text-sm leading-relaxed text-[#7a776f]">
-                                    We&apos;ve emailed your booking request for {studio.title}. The
-                                    host usually replies quickly — you&apos;ll hear back with a
-                                    confirmation shortly.
+                                    Your booking request for {studio.title} is saved with the
+                                    status <span className="font-medium text-[#1b1b1a]">Pending</span>.
+                                    You can follow it, or cancel it while it&apos;s pending, from My
+                                    Bookings.
                                 </Dialog.Description>
-                                <button
-                                    type="button"
-                                    onClick={() => closeAndReset(false)}
-                                    className="mt-6 w-full rounded-xl border border-[#e7e3db] bg-white py-3 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
-                                >
-                                    Back to studio
-                                </button>
+                                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => closeAndReset(false)}
+                                        className="rounded-xl border border-[#e7e3db] bg-white py-3 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
+                                    >
+                                        Back to studio
+                                    </button>
+                                    <Link
+                                        href="/my-bookings"
+                                        className="rounded-xl bg-[#FF5A1F] py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2"
+                                    >
+                                        View my bookings
+                                    </Link>
+                                </div>
                             </div>
                         ) : (
                             <>
@@ -267,7 +323,9 @@ export default function BookingCard({ studio }: Props) {
                                     <dl className="mt-3 space-y-1.5 text-[13px]">
                                         <div className="flex justify-between">
                                             <dt className="text-[#7a776f]">Date</dt>
-                                            <dd className="font-medium text-[#1b1b1a]">{date}</dd>
+                                            <dd className="font-medium text-[#1b1b1a]">
+                                                {formatBookingDate(date)}
+                                            </dd>
                                         </div>
                                         <div className="flex justify-between">
                                             <dt className="text-[#7a776f]">Time</dt>
@@ -290,36 +348,40 @@ export default function BookingCard({ studio }: Props) {
                                     </dl>
                                 </div>
 
-                                <form
-                                    className="mt-5 space-y-4"
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        if (!canBook) return;
-                                        setConfirmed(true);
-                                    }}
-                                >
+                                <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
+                                    {error && (
+                                        <div
+                                            className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-xs text-red-700"
+                                            role="alert"
+                                        >
+                                            {error}
+                                        </div>
+                                    )}
                                     <label className={fieldBox}>
                                         <span className={fieldLabel}>Your name</span>
                                         <input
                                             type="text"
-                                            required
-                                            placeholder="Alex Rivera"
-                                            className={fieldInput}
+                                            readOnly
+                                            value={user?.name ?? ""}
+                                            className={cn(fieldInput, "cursor-not-allowed text-[#6f6c66]")}
                                         />
                                     </label>
                                     <label className={fieldBox}>
                                         <span className={fieldLabel}>Email</span>
                                         <input
                                             type="email"
-                                            required
-                                            placeholder="alex@example.com"
-                                            className={fieldInput}
+                                            readOnly
+                                            value={user?.email ?? ""}
+                                            className={cn(fieldInput, "cursor-not-allowed text-[#6f6c66]")}
                                         />
                                     </label>
                                     <label className={fieldBox}>
                                         <span className={fieldLabel}>Note for the host (optional)</span>
                                         <textarea
                                             rows={3}
+                                            maxLength={500}
+                                            value={note}
+                                            onChange={(e) => setNote(e.target.value)}
                                             placeholder="Tell the host about your project…"
                                             className={cn(fieldInput, "resize-y")}
                                         />
@@ -327,10 +389,10 @@ export default function BookingCard({ studio }: Props) {
 
                                     <button
                                         type="submit"
-                                        disabled={!canBook}
+                                        disabled={!canBook || submitting}
                                         className="w-full rounded-xl bg-[#FF5A1F] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2 disabled:opacity-50"
                                     >
-                                        Send booking request
+                                        {submitting ? "Sending…" : "Send booking request"}
                                     </button>
                                     <p className="text-center text-[12px] text-[#8f8c85]">
                                         Free cancellation up to 48 hours before your session.

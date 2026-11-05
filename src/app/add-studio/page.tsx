@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
     ApiError,
     CATEGORIES,
@@ -10,6 +11,7 @@ import {
     priceBreakdown,
 } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import ImageUploadField from "@/components/ImageUploadField";
 
 /* --------------------------------- Data ---------------------------------- */
 
@@ -123,10 +125,6 @@ export default function AddStudioPage() {
     const [errors, setErrors] = useState<FieldErrors>({});
     const [submitting, setSubmitting] = useState(false);
     const [status, setStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
-    const [imageFailed, setImageFailed] = useState(false);
-
-
-    
 
     // Private route guard
     useEffect(() => {
@@ -211,14 +209,12 @@ export default function AddStudioPage() {
                 imageUrl: form.imageUrl.trim(),
                 amenities: form.amenities,
                 overview: form.overview.trim(),
-                hostName: user?.name,
-                hostEmail: user?.email,
+                ownerName: user?.name,
+                ownerEmail: user?.email,
             });
-            setStatus({ kind: "ok", msg: "Studio published." });
-            setForm(INITIAL);
-            setImageFailed(false);
             window.localStorage.removeItem(DRAFT_KEY);
-            router.push(`/studios/${studio.id}`);
+            toast.success(`“${studio.title}” is live! Taking you to your listings…`);
+            router.push("/my-listings");
         } catch (err) {
             if (err instanceof ApiError) {
                 if (Object.keys(err.fields).length > 0) setErrors(err.fields);
@@ -386,38 +382,11 @@ return (
 
                     {/* 04 Photo */}
                     <Section title="04 / Let your space speak" description="Lead with a wide, naturally lit view of your space.">
-                        <Field label="Image URL" required error={errors.imageUrl}>
-                            <input
-                                type="url"
-                                className={inputCls}
-                                value={form.imageUrl}
-                                onChange={(e) => {
-                                    set("imageUrl", e.target.value);
-                                    setImageFailed(false);
-                                }}
-                                placeholder="https://your-site.com/studio-photo.jpg"
-                            />
-                        </Field>
-                        {form.imageUrl.trim() && (
-                            <div className="overflow-hidden rounded-xl border border-[#e7e3db] bg-[#f0ece4]">
-                                {imageFailed ? (
-                                    <p className="px-4 py-10 text-center text-xs text-[#7a776f]">
-                                        We couldn&apos;t load that image. Check the link and try again.
-                                    </p>
-                                ) : (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img
-                                        src={form.imageUrl}
-                                        alt="Studio cover preview"
-                                        className="h-56 w-full object-cover"
-                                        onError={() => setImageFailed(true)}
-                                    />
-                                )}
-                                <p className="border-t border-[#e7e3db] bg-white px-3 py-2 text-[11px] text-[#7a776f]">
-                                    Cover photo preview
-                                </p>
-                            </div>
-                        )}
+                        <ImageUploadField
+                            value={form.imageUrl}
+                            onChange={(url) => set("imageUrl", url)}
+                            error={errors.imageUrl}
+                        />
                     </Section>
 
                     {/* 05 Amenities */}
@@ -466,11 +435,11 @@ return (
 
                         <div className="grid gap-4 sm:grid-cols-2">
                             <label className="block rounded-xl border border-[#e7e3db] bg-[#f3f0ea] px-4 pb-3 pt-3">
-                                <span className="block text-[11px] font-medium text-[#6f6c66]">Host name</span>
+                                <span className="block text-[11px] font-medium text-[#6f6c66]">Your name (from your account)</span>
                                 <input readOnly value={user.name} className={`${inputCls} cursor-not-allowed text-[#6f6c66]`} />
                             </label>
                             <label className="block rounded-xl border border-[#e7e3db] bg-[#f3f0ea] px-4 pb-3 pt-3">
-                                <span className="block text-[11px] font-medium text-[#6f6c66]">Host email</span>
+                                <span className="block text-[11px] font-medium text-[#6f6c66]">Your email (from your account)</span>
                                 <input readOnly value={user.email} className={`${inputCls} cursor-not-allowed text-[#6f6c66]`} />
                             </label>
                         </div>
@@ -514,7 +483,7 @@ return (
                                 ["Clear, memorable name", !!form.title.trim()],
                                 ["Transparent hourly pricing", parseFloat(form.hourlyRate) > 0],
                                 ["Accurate address", !!form.address.trim()],
-                                ["A quality cover photo", !!form.imageUrl.trim() && !imageFailed],
+                                ["A quality cover photo", !!form.imageUrl.trim()],
                                 ["Amenities & overview", form.amenities.length > 0 && form.overview.length >= 40],
                             ].map(([label, done]) => (
                                 <li key={label as string} className="flex items-center gap-2">

@@ -1,18 +1,8 @@
 "use client";
 
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "sonner";
 
-/** App-wide toast host (react-toastify). Rendered once in the root layout. */
+/** App-wide toast host (Sonner). Rendered once in the root layout. */
 export default function ToastProvider() {
-  return (
-    <ToastContainer
-      position="bottom-right"
-      autoClose={4000}
-      hideProgressBar={false}
-      newestOnTop
-      closeOnClick
-      pauseOnHover
-      theme="light"
-    />
-  );
+  return <Toaster position="bottom-right" richColors closeButton duration={4000} />;
 }

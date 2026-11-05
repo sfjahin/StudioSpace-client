@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+import { MapPin, Star } from "lucide-react";
 import { formatMoney, listStudios, type Studio } from "@/lib/api";
+import { averageRating, buildReviews } from "@/lib/studio-detail";
 
 export const metadata: Metadata = {
     title: "Explore studios — StudioSpace",
@@ -9,27 +11,42 @@ export const metadata: Metadata = {
 };
 
 function StudioCard({ studio }: { studio: Studio }) {
+    const rating = averageRating(buildReviews(studio));
+
     return (
-        <Link
-            href={`/studios/${studio.id}`}
-            className="group flex flex-col overflow-hidden rounded-2xl border border-[#e7e3db] bg-white transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
-        >
-            <div className="aspect-[4/3] overflow-hidden bg-[#f0ece4]">
+        <article className="group flex flex-col overflow-hidden rounded-2xl border border-[#e7e3db] bg-white transition-shadow hover:shadow-lg">
+            <Link
+                href={`/studios/${studio.id}`}
+                aria-label={`View ${studio.title}`}
+                className="relative block aspect-[4/3] overflow-hidden bg-[#f0ece4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#FF5A1F]/40"
+            >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     src={studio.imageUrl}
                     alt={studio.title}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />
-            </div>
-            <div className="flex flex-1 flex-col p-5">
-                <p className="text-[11px] font-medium uppercase tracking-wide text-[#FF5A1F]">
+                <span className="absolute left-3 top-3 rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#FF5A1F] shadow-sm">
                     {studio.category}
+                </span>
+            </Link>
+            <div className="flex flex-1 flex-col p-5">
+                <div className="flex items-start justify-between gap-3">
+                    <h2 className="text-lg font-semibold tracking-tight text-[#1b1b1a]">
+                        {studio.title}
+                    </h2>
+                    <span
+                        className="flex shrink-0 items-center gap-1 pt-1 text-sm font-medium text-[#1b1b1a]"
+                        aria-label={`Rated ${rating.toFixed(2)} out of 5`}
+                    >
+                        <Star className="size-3.5 fill-[#FF5A1F] text-[#FF5A1F]" aria-hidden />
+                        {rating.toFixed(2)}
+                    </span>
+                </div>
+                <p className="mt-1.5 flex items-start gap-1.5 text-sm text-[#7a776f]">
+                    <MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+                    <span className="line-clamp-2">{studio.address}</span>
                 </p>
-                <h2 className="mt-1.5 text-lg font-semibold tracking-tight text-[#1b1b1a]">
-                    {studio.title}
-                </h2>
-                <p className="mt-1 line-clamp-2 text-sm text-[#7a776f]">{studio.address}</p>
                 <div className="mt-4 flex items-center justify-between text-sm">
                     <span className="font-semibold text-[#1b1b1a]">
                         {formatMoney(studio.hourlyRate)}
@@ -37,8 +54,14 @@ function StudioCard({ studio }: { studio: Studio }) {
                     </span>
                     <span className="text-[#7a776f]">Fits {studio.maxCapacity}</span>
                 </div>
+                <Link
+                    href={`/studios/${studio.id}`}
+                    className="mt-5 rounded-xl bg-[#FF5A1F] py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2"
+                >
+                    View Details
+                </Link>
             </div>
-        </Link>
+        </article>
     );
 }
 
