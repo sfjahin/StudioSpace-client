@@ -2,13 +2,27 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Pencil } from "lucide-react";
-import { formatMoney, listStudios, type Studio } from "@/lib/api";
+import { Dialog } from "@base-ui/react/dialog";
+import { Pencil, Trash2 } from "lucide-react";
+import { toast } from "react-toastify";
+import {
+    ApiError,
+    deleteStudio,
+    formatMoney,
+    listStudios,
+    type Studio,
+} from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 /* --------------------------------- Cards --------------------------------- */
 
-function ListingCard({ studio }: { studio: Studio }) {
+function ListingCard({
+    studio,
+    onRequestDelete,
+}: {
+    studio: Studio;
+    onRequestDelete: (studio: Studio) => void;
+}) {
     return (
         <article className="flex flex-col overflow-hidden rounded-2xl border border-[#e7e3db] bg-white">
             <Link
@@ -44,6 +58,8 @@ function ListingCard({ studio }: { studio: Studio }) {
                     </span>
                     <span className="text-[#7a776f]">Fits {studio.maxCapacity}</span>
                 </div>
+
+                {/* Actions: view / update / delete */}
                 <div className="mt-4 grid gap-2 border-t border-[#e7e3db] pt-4 sm:grid-cols-2">
                     <Link
                         href={`/studios/${studio.id}`}
@@ -53,14 +69,116 @@ function ListingCard({ studio }: { studio: Studio }) {
                     </Link>
                     <Link
                         href={`/studios/edit/${studio.id}`}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2"
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#e7e3db] bg-white py-2.5 text-sm font-medium text-[#1b1b1a] transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
                     >
-                        <Pencil className="size-3.5" aria-hidden />
-                        Edit
+                        <Pencil className="size-3.5 text-[#FF5A1F]" aria-hidden />
+                        Update
                     </Link>
+                    <button
+                        type="button"
+                        onClick={() => onRequestDelete(studio)}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-white py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 sm:col-span-2"
+                    >
+                        <Trash2 className="size-3.5" aria-hidden />
+                        Delete
+                    </button>
                 </div>
             </div>
         </article>
+    );
+}
+
+/* --------------------------- Delete confirmation -------------------------- */
+
+function DeleteConfirmDialog({
+    studio,
+    onClose,
+    onDeleted,
+}: {
+    studio: Studio | null;
+    onClose: () => void;
+    onDeleted: (id: string) => void;
+}) {
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const close = () => {
+        setError(null);
+        setSubmitting(false);
+        onClose();
+    };
+
+    const handleDelete = async () => {
+        if (!studio) return;
+        setError(null);
+        setSubmitting(true);
+        try {
+            await deleteStudio(studio.id);
+            toast.success(`“${studio.title}” was deleted.`);
+            onDeleted(studio.id);
+            onClose();
+        } catch (err) {
+            setError(
+                err instanceof ApiError
+                    ? err.message
+                    : "We couldn't delete that studio. Please try again."
+            );
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    return (
+        <Dialog.Root
+            open={studio !== null}
+            onOpenChange={(open) => {
+                if (!open) close();
+            }}
+        >
+            <Dialog.Portal>
+                <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/50" />
+                <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl outline-none">
+                    <Dialog.Title className="text-xl font-semibold tracking-tight text-[#1b1b1a]">
+                        Delete this listing?
+                    </Dialog.Title>
+                    <Dialog.Description className="mt-2 text-sm leading-relaxed text-[#7a776f]">
+                        {studio ? (
+                            <>
+                                <span className="font-medium text-[#1b1b1a]">{studio.title}</span>{" "}
+                                will be permanently removed from MongoDB. This can&apos;t be
+                                undone — bookings and listing details won&apos;t be recoverable.
+                            </>
+                        ) : null}
+                    </Dialog.Description>
+
+                    {error && (
+                        <div
+                            className="mt-4 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-xs text-red-700"
+                            role="alert"
+                        >
+                            {error}
+                        </div>
+                    )}
+
+                    <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                        <Dialog.Close
+                            disabled={submitting}
+                            className="rounded-xl border border-[#e7e3db] bg-white py-3 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 disabled:opacity-60"
+                        >
+                            Cancel
+                        </Dialog.Close>
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            disabled={submitting}
+                            className="rounded-xl bg-red-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 disabled:opacity-60"
+                        >
+                            {submitting ? "Deleting…" : "Delete listing"}
+                        </button>
+                    </div>
+                </Dialog.Popup>
+            </Dialog.Portal>
+        </Dialog.Root>
     );
 }
 
@@ -92,13 +210,14 @@ export default function MyListingsPage() {
 
     const [studios, setStudios] = useState<Studio[] | null>(null); // null = loading
     const [failed, setFailed] = useState(false);
+    const [pendingDelete, setPendingDelete] = useState<Studio | null>(null);
 
     // Private route guard
     useEffect(() => {
         if (!loading && !user) router.replace("/login?next=/my-listings");
     }, [loading, user, router]);
 
-    // Load this host's listings.
+    // Load this owner's listings (owner email match — stored as hostEmail).
     useEffect(() => {
         if (!user) return;
         let cancelled = false;
@@ -124,6 +243,10 @@ export default function MyListingsPage() {
         };
     }, [user]);
 
+    const handleDeleted = (id: string) => {
+        setStudios((prev) => (prev ? prev.filter((s) => s.id !== id) : prev));
+    };
+
     if (loading || !user) {
         return (
             <div className="grid min-h-screen place-items-center bg-[#f7f5f1] text-sm text-[#7a776f]">
@@ -145,8 +268,8 @@ export default function MyListingsPage() {
                             Your listings.
                         </h1>
                         <p className="mt-2 max-w-xl text-[15px] text-[#7a776f]">
-                            Everything you publish with {user.email} — edit details, pricing and
-                            photos whenever you need.
+                            Everything you publish with {user.email} — update details or remove
+                            a listing whenever you need.
                         </p>
                     </div>
                     <Link
@@ -174,7 +297,7 @@ export default function MyListingsPage() {
                             No listings yet.
                         </h2>
                         <p className="mt-2 text-sm text-[#7a776f]">
-                            Studios you publish will show up here, ready to edit any time.
+                            Studios you publish will show up here, ready to update any time.
                         </p>
                         <Link
                             href="/add-studio"
@@ -186,11 +309,22 @@ export default function MyListingsPage() {
                 ) : (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {studios.map((studio) => (
-                            <ListingCard key={studio.id} studio={studio} />
+                            <ListingCard
+                                key={studio.id}
+                                studio={studio}
+                                onRequestDelete={setPendingDelete}
+                            />
                         ))}
                     </div>
                 )}
             </div>
+
+            {/* Delete confirmation modal */}
+            <DeleteConfirmDialog
+                studio={pendingDelete}
+                onClose={() => setPendingDelete(null)}
+                onDeleted={handleDeleted}
+            />
         </main>
     );
 }

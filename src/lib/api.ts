@@ -102,6 +102,14 @@ export function updateStudio(id: string, input: StudioInput): Promise<Studio> {
   });
 }
 
+/** Permanently delete a listing. */
+export function deleteStudio(id: string): Promise<{ id: string; deleted: boolean }> {
+  return request<{ id: string; deleted: boolean }>(
+    `/studios/${encodeURIComponent(id)}`,
+    { method: "DELETE" }
+  );
+}
+
 export function priceBreakdown(hourlyRate: number, hours = 4) {
   const subtotal = hourlyRate * hours;
   const fee = subtotal * SERVICE_FEE_RATE;

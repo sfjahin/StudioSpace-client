@@ -34,6 +34,7 @@ import {
     squareFeet,
 } from "@/lib/studio-detail";
 import BookingCard from "@/components/BookingCard";
+import DeleteStudioButton from "@/components/DeleteStudioButton";
 import EditStudioButton from "@/components/EditStudioButton";
 import ReviewsSection from "@/components/ReviewsSection";
 import StudioGallery from "@/components/StudioGallery";
@@ -182,7 +183,10 @@ async function StudioDetail({ id }: { id: string }) {
                             </span>
                         </p>
                     </div>
-                    <EditStudioButton studio={studio} />
+                    <div className="flex flex-wrap items-center gap-3">
+                        <EditStudioButton studio={studio} />
+                        <DeleteStudioButton studio={studio} />
+                    </div>
                 </div>
             </header>
 
