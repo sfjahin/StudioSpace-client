@@ -130,6 +130,7 @@ export function createStudio(input: StudioInput): Promise<Studio> {
 }
 
 /** List studios. Pass `ownerEmail` to get only that owner's listings. */
+<<<<<<< HEAD
 export async function listStudios(
   opts: { ownerEmail?: string; limit?: number; category?: string } = {}
 ): Promise<Studio[]> {
@@ -138,6 +139,10 @@ export async function listStudios(
   if (opts.limit) qs.set("limit", String(opts.limit));
   if (opts.category) qs.set("category", opts.category);
   const query = qs.size ? `?${qs}` : "";
+=======
+export async function listStudios(opts: { ownerEmail?: string } = {}): Promise<Studio[]> {
+  const query = opts.ownerEmail ? `?ownerEmail=${encodeURIComponent(opts.ownerEmail)}` : "";
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
   const data = await request<{ studios: Studio[] }>(`/studios${query}`);
   return data.studios ?? [];
 }
@@ -186,6 +191,7 @@ export function cancelBooking(id: string, userEmail: string): Promise<Booking> {
   });
 }
 
+<<<<<<< HEAD
 /** Bookings other people made for this host's studios. */
 export async function listHostBookings(ownerEmail: string): Promise<Booking[]> {
   const data = await request<{ bookings: Booking[] }>(
@@ -206,6 +212,8 @@ export function updateBookingStatus(
   });
 }
 
+=======
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
 export function priceBreakdown(hourlyRate: number, hours = 4) {
   const subtotal = hourlyRate * hours;
   const fee = subtotal * SERVICE_FEE_RATE;

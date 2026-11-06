@@ -15,9 +15,15 @@ type Props = {
 };
 
 const fieldBox =
+<<<<<<< HEAD
     "block rounded-xl border bg-ss-surface px-4 pb-3 pt-3 transition-colors focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20";
 const inputCls =
     "mt-1 w-full bg-transparent text-[15px] text-ss-ink outline-none placeholder:text-ss-faint";
+=======
+    "block rounded-xl border bg-white px-4 pb-3 pt-3 transition-colors focus-within:border-[#FF5A1F] focus-within:ring-2 focus-within:ring-[#FF5A1F]/20";
+const inputCls =
+    "mt-1 w-full bg-transparent text-[15px] text-[#1b1b1a] outline-none placeholder:text-[#a8a59e]";
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
 
 /**
  * Studio photo field: upload a file to imgbb, or paste an image link.
@@ -69,6 +75,7 @@ export default function ImageUploadField({
                     type="button"
                     onClick={() => fileRef.current?.click()}
                     disabled={uploading}
+<<<<<<< HEAD
                     className="inline-flex items-center gap-2 rounded-xl border border-ss-line bg-ss-surface px-4 py-2.5 text-sm font-medium transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:opacity-60"
                 >
                     {uploading ? (
@@ -79,13 +86,31 @@ export default function ImageUploadField({
                     {uploading ? "Uploading…" : "Upload a photo"}
                 </button>
                 <span className="text-xs text-ss-muted">
+=======
+                    className="inline-flex items-center gap-2 rounded-xl border border-[#e7e3db] bg-white px-4 py-2.5 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 disabled:opacity-60"
+                >
+                    {uploading ? (
+                        <Loader2 className="size-4 animate-spin text-[#FF5A1F]" aria-hidden />
+                    ) : (
+                        <ImagePlus className="size-4 text-[#FF5A1F]" aria-hidden />
+                    )}
+                    {uploading ? "Uploading…" : "Upload a photo"}
+                </button>
+                <span className="text-xs text-[#8f8c85]">
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                     JPG, PNG, WebP or GIF · up to {MAX_IMAGE_MB} MB · hosted on imgbb
                 </span>
             </div>
 
+<<<<<<< HEAD
             <label className={`${fieldBox} ${error ? "border-red-400" : "border-ss-line"}`}>
                 <span className="block text-[11px] font-medium text-ss-muted">
                     Image URL<span className="text-brand"> *</span>
+=======
+            <label className={`${fieldBox} ${error ? "border-red-400" : "border-[#e7e3db]"}`}>
+                <span className="block text-[11px] font-medium text-[#6f6c66]">
+                    Image URL<span className="text-[#FF5A1F]"> *</span>
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                 </span>
                 <input
                     type="url"
@@ -99,16 +124,26 @@ export default function ImageUploadField({
                         {error}
                     </span>
                 ) : (
+<<<<<<< HEAD
                     <span className="mt-1 block text-[11px] text-ss-muted">
+=======
+                    <span className="mt-1 block text-[11px] text-[#8f8c85]">
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         Uploading fills this in for you.
                     </span>
                 )}
             </label>
 
             {url && (
+<<<<<<< HEAD
                 <div className="overflow-hidden rounded-xl border border-ss-line bg-ss-sunk">
                     {previewFailed ? (
                         <p className="px-4 py-10 text-center text-xs text-ss-muted">
+=======
+                <div className="overflow-hidden rounded-xl border border-[#e7e3db] bg-[#f0ece4]">
+                    {previewFailed ? (
+                        <p className="px-4 py-10 text-center text-xs text-[#7a776f]">
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                             We couldn&apos;t load that image. Check the link and try again.
                         </p>
                     ) : (
@@ -120,7 +155,11 @@ export default function ImageUploadField({
                             onError={() => setFailedUrl(url)}
                         />
                     )}
+<<<<<<< HEAD
                     <p className="border-t border-ss-line bg-ss-surface px-3 py-2 text-[11px] text-ss-muted">
+=======
+                    <p className="border-t border-[#e7e3db] bg-white px-3 py-2 text-[11px] text-[#7a776f]">
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         Cover photo preview
                     </p>
                 </div>

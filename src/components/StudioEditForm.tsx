@@ -11,7 +11,11 @@ import {
     type FieldErrors,
     type Studio,
 } from "@/lib/api";
+<<<<<<< HEAD
 import { useAuth } from "@/lib/auth-client";
+=======
+import { useAuth } from "@/lib/auth";
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
 import ImageUploadField from "./ImageUploadField";
 
 /* --------------------------------- Data ---------------------------------- */
@@ -412,7 +416,11 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                         <input
                             readOnly
                             value={ownerName}
+<<<<<<< HEAD
                             className={`${inputCls} cursor-not-allowed text-ss-muted`}
+=======
+                            className={`${inputCls} cursor-not-allowed text-[#6f6c66]`}
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         />
                     </label>
                     <label className="block rounded-xl border border-ss-line bg-ss-hover px-4 pb-3 pt-3">
@@ -420,7 +428,11 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                         <input
                             readOnly
                             value={ownerEmail}
+<<<<<<< HEAD
                             className={`${inputCls} cursor-not-allowed text-ss-muted`}
+=======
+                            className={`${inputCls} cursor-not-allowed text-[#6f6c66]`}
+>>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         />
                     </label>
                 </div>
