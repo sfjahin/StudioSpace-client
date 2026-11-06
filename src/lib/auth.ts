@@ -1,11 +1,38 @@
-"use client";
+import { betterAuth } from "better-auth";
+import { MongoClient } from "mongodb";
+import { mongodbAdapter } from "@better-auth/mongo-adapter";
 
-export type AuthUser = { name: string; email: string };
+const uri = process.env.MONGODB_URI;
 
-// Stable reference so effects that depend on `user` don't re-run every render.
-const DEMO_USER: AuthUser = { name: "Maya Chen", email: "maya@example.com" };
-
-export function useAuth(): { user: AuthUser | null; loading: boolean } {
-  // TODO: swap for your auth provider, e.g. `const { data, status } = useSession()`
-  return { user: DEMO_USER, loading: false };
+if (!uri) {
+  throw new Error("MONGODB_URI is not set. Add it to your .env file.");
 }
+
+// Reuse the connection across hot reloads in development so we don't leak clients.
+const globalForAuth = globalThis as unknown as { mongoClient?: MongoClient };
+
+const client = globalForAuth.mongoClient ?? new MongoClient(uri);
+if (process.env.NODE_ENV !== "production") globalForAuth.mongoClient = client;
+
+const db = client.db("studiospace");
+
+export const auth = betterAuth({
+  database: mongodbAdapter(db, { client }),
+  emailAndPassword: {
+    enabled: true,
+    minPasswordLength: 6,
+  },
+  socialProviders:
+    process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+      ? {
+          google: {
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          },
+        }
+      : undefined,
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    updateAge: 60 * 60 * 24, // refresh once a day
+  },
+});

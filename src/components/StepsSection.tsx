@@ -1,23 +1,23 @@
 const steps = [
   {
     number: "01",
-    title: "Find your fit",
-    description: "Explore unique studios by location, craft, and budget.",
+    title: "Discover Spaces",
+    description: "Browse studios by craft, location and budget.",
   },
   {
     number: "02",
-    title: "Make it yours",
-    description: "Pick your date and time. Know exactly what's included.",
+    title: "Select Shoot Hours",
+    description: "Pick your date and hours. See exactly what's included.",
   },
   {
     number: "03",
-    title: "Book with confidence",
-    description: "Secure checkout, clear pricing, and a real host to help.",
+    title: "Book Instantly",
+    description: "Transparent pricing and a real host, confirmed in a click.",
   },
   {
     number: "04",
-    title: "Show up. Create.",
-    description: "Walk in, settle in, and bring your next big idea to life.",
+    title: "Create & Produce",
+    description: "Walk in, settle in, and make something that matters.",
   },
 ];
 
@@ -25,7 +25,7 @@ export default function StepsSection() {
   return (
     <section className="mx-auto w-full max-w-7xl px-6 pb-16">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-        From idea to action
+        How booking works
       </p>
       <h2 className="mt-4 text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">
         Less logistics. More creating.

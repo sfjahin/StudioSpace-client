@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
     ApiError,
     CATEGORIES,
@@ -9,7 +10,8 @@ import {
     formatMoney,
     priceBreakdown,
 } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/auth-client";
+import ImageUploadField from "@/components/ImageUploadField";
 
 /* --------------------------------- Data ---------------------------------- */
 
@@ -58,9 +60,9 @@ const INITIAL: FormState = {
 /* ------------------------------ UI primitives ----------------------------- */
 
 const fieldBox =
-    "rounded-xl border bg-white px-4 pb-3 pt-3 transition-colors focus-within:border-[#FF5A1F] focus-within:ring-2 focus-within:ring-[#FF5A1F]/20";
+    "rounded-xl border bg-ss-surface px-4 pb-3 pt-3 transition-colors focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20";
 const inputCls =
-    "mt-1 w-full bg-transparent text-[15px] text-[#1b1b1a] outline-none placeholder:text-[#a8a59e]";
+    "mt-1 w-full bg-transparent text-[15px] text-ss-ink outline-none placeholder:text-ss-faint";
 
 function Field({
     label,
@@ -77,11 +79,11 @@ function Field({
 }) {
     return (
         <label
-            className={`${fieldBox} block ${error ? "border-red-400" : "border-[#e7e3db]"}`}
+            className={`${fieldBox} block ${error ? "border-red-400" : "border-ss-line"}`}
         >
-            <span className="block text-[11px] font-medium text-[#6f6c66]">
+            <span className="block text-[11px] font-medium text-ss-muted">
                 {label}
-                {required && <span className="text-[#FF5A1F]"> *</span>}
+                {required && <span className="text-brand"> *</span>}
             </span>
             {children}
             {error ? (
@@ -89,7 +91,7 @@ function Field({
                     {error}
                 </span>
             ) : hint ? (
-                <span className="mt-1 block text-[11px] text-[#8f8c85]">{hint}</span>
+                <span className="mt-1 block text-[11px] text-ss-muted">{hint}</span>
             ) : null}
         </label>
     );
@@ -105,9 +107,9 @@ function Section({
     children: React.ReactNode;
 }) {
     return (
-        <section className="rounded-2xl border border-[#e7e3db] bg-white p-6 sm:p-7">
-            <h2 className="text-xl font-semibold tracking-tight text-[#1b1b1a]">{title}</h2>
-            <p className="mt-2 text-sm text-[#7a776f]">{description}</p>
+        <section className="rounded-2xl border border-ss-line bg-ss-surface p-6 sm:p-7">
+            <h2 className="text-xl font-semibold tracking-tight text-ss-ink">{title}</h2>
+            <p className="mt-2 text-sm text-ss-muted">{description}</p>
             <div className="mt-5 space-y-4">{children}</div>
         </section>
     );
@@ -123,10 +125,6 @@ export default function AddStudioPage() {
     const [errors, setErrors] = useState<FieldErrors>({});
     const [submitting, setSubmitting] = useState(false);
     const [status, setStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
-    const [imageFailed, setImageFailed] = useState(false);
-
-
-    
 
     // Private route guard
     useEffect(() => {
@@ -211,14 +209,12 @@ export default function AddStudioPage() {
                 imageUrl: form.imageUrl.trim(),
                 amenities: form.amenities,
                 overview: form.overview.trim(),
-                hostName: user?.name,
-                hostEmail: user?.email,
+                ownerName: user?.name,
+                ownerEmail: user?.email,
             });
-            setStatus({ kind: "ok", msg: "Studio published." });
-            setForm(INITIAL);
-            setImageFailed(false);
             window.localStorage.removeItem(DRAFT_KEY);
-            router.push(`/studios/${studio.id}`);
+            toast.success(`“${studio.title}” is live! Taking you to your listings…`);
+            router.push("/my-listings");
         } catch (err) {
             if (err instanceof ApiError) {
                 if (Object.keys(err.fields).length > 0) setErrors(err.fields);
@@ -234,7 +230,7 @@ export default function AddStudioPage() {
 
     if (loading || !user) {
         return (
-            <div className="grid min-h-screen place-items-center bg-[#f7f5f1] text-sm text-[#7a776f]">
+            <div className="grid min-h-screen place-items-center bg-ss-bg text-sm text-ss-muted">
                 Checking your account…
             </div>
         );
@@ -247,17 +243,17 @@ export default function AddStudioPage() {
 
 
 return (
-    <main className="min-h-screen bg-[#f7f5f1] text-[#1b1b1a]">
+    <main className="min-h-screen bg-ss-bg text-ss-ink">
         <div className="mx-auto max-w-6xl px-5 pb-20 pt-10 sm:px-8">
             {/* Header */}
             <header className="mb-8">
-                <p className="text-xs font-medium tracking-wide text-[#FF5A1F]">
+                <p className="text-xs font-medium tracking-wide text-brand">
                     Host workspace / New listing
                 </p>
                 <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
                     Make room for possibility.
                 </h1>
-                <p className="mt-2 max-w-xl text-[15px] text-[#7a776f]">
+                <p className="mt-2 max-w-xl text-[15px] text-ss-muted">
                     Introduce your creative space to a world of people ready to make something great.
                 </p>
             </header>
@@ -268,7 +264,7 @@ return (
                         ? "border-green-300 bg-green-50 text-green-800"
                         : status?.kind === "err"
                             ? "border-red-300 bg-red-50 text-red-700"
-                            : "border-[#e7e3db] bg-white text-[#7a776f]"
+                            : "border-ss-line bg-ss-surface text-ss-muted"
                     }`}
                 role="status"
             >
@@ -276,7 +272,7 @@ return (
                     status.msg
                 ) : (
                     <>
-                        <span className="rounded-md bg-[#ffe9df] px-2 py-1 text-[10px] font-semibold text-[#FF5A1F]">
+                        <span className="rounded-md bg-[#ffe9df] px-2 py-1 text-[10px] font-semibold text-brand">
                             Draft
                         </span>
                         Fields marked * are required before publishing.
@@ -386,38 +382,11 @@ return (
 
                     {/* 04 Photo */}
                     <Section title="04 / Let your space speak" description="Lead with a wide, naturally lit view of your space.">
-                        <Field label="Image URL" required error={errors.imageUrl}>
-                            <input
-                                type="url"
-                                className={inputCls}
-                                value={form.imageUrl}
-                                onChange={(e) => {
-                                    set("imageUrl", e.target.value);
-                                    setImageFailed(false);
-                                }}
-                                placeholder="https://your-site.com/studio-photo.jpg"
-                            />
-                        </Field>
-                        {form.imageUrl.trim() && (
-                            <div className="overflow-hidden rounded-xl border border-[#e7e3db] bg-[#f0ece4]">
-                                {imageFailed ? (
-                                    <p className="px-4 py-10 text-center text-xs text-[#7a776f]">
-                                        We couldn&apos;t load that image. Check the link and try again.
-                                    </p>
-                                ) : (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img
-                                        src={form.imageUrl}
-                                        alt="Studio cover preview"
-                                        className="h-56 w-full object-cover"
-                                        onError={() => setImageFailed(true)}
-                                    />
-                                )}
-                                <p className="border-t border-[#e7e3db] bg-white px-3 py-2 text-[11px] text-[#7a776f]">
-                                    Cover photo preview
-                                </p>
-                            </div>
-                        )}
+                        <ImageUploadField
+                            value={form.imageUrl}
+                            onChange={(url) => set("imageUrl", url)}
+                            error={errors.imageUrl}
+                        />
                     </Section>
 
                     {/* 05 Amenities */}
@@ -434,7 +403,7 @@ return (
                                             className="peer sr-only"
                                         />
                                         <span
-                                            className={`grid h-4 w-4 place-items-center rounded border text-[10px] leading-none text-white transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF5A1F]/40 ${on ? "border-[#FF5A1F] bg-[#FF5A1F]" : "border-[#cfcac0] bg-white"
+                                            className={`grid h-4 w-4 place-items-center rounded border text-[10px] leading-none text-white transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-brand/40 ${on ? "border-brand bg-brand" : "border-[#cfcac0] bg-ss-surface"
                                                 }`}
                                             aria-hidden
                                         >
@@ -465,13 +434,13 @@ return (
                         </Field>
 
                         <div className="grid gap-4 sm:grid-cols-2">
-                            <label className="block rounded-xl border border-[#e7e3db] bg-[#f3f0ea] px-4 pb-3 pt-3">
-                                <span className="block text-[11px] font-medium text-[#6f6c66]">Host name</span>
-                                <input readOnly value={user.name} className={`${inputCls} cursor-not-allowed text-[#6f6c66]`} />
+                            <label className="block rounded-xl border border-ss-line bg-ss-hover px-4 pb-3 pt-3">
+                                <span className="block text-[11px] font-medium text-ss-muted">Your name (from your account)</span>
+                                <input readOnly value={user.name} className={`${inputCls} cursor-not-allowed text-ss-muted`} />
                             </label>
-                            <label className="block rounded-xl border border-[#e7e3db] bg-[#f3f0ea] px-4 pb-3 pt-3">
-                                <span className="block text-[11px] font-medium text-[#6f6c66]">Host email</span>
-                                <input readOnly value={user.email} className={`${inputCls} cursor-not-allowed text-[#6f6c66]`} />
+                            <label className="block rounded-xl border border-ss-line bg-ss-hover px-4 pb-3 pt-3">
+                                <span className="block text-[11px] font-medium text-ss-muted">Your email (from your account)</span>
+                                <input readOnly value={user.email} className={`${inputCls} cursor-not-allowed text-ss-muted`} />
                             </label>
                         </div>
                     </Section>
@@ -481,19 +450,19 @@ return (
                         <button
                             type="button"
                             onClick={saveDraft}
-                            className="rounded-xl border border-[#e7e3db] bg-white py-3.5 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
+                            className="rounded-xl border border-ss-line bg-ss-surface py-3.5 text-sm font-medium transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
                         >
                             Save draft
                         </button>
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="rounded-xl bg-[#FF5A1F] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2 disabled:opacity-60"
+                            className="rounded-xl bg-brand py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2 disabled:opacity-60"
                         >
                             {submitting ? "Publishing…" : "Publish studio"}
                         </button>
                     </div>
-                    <p className="text-xs text-[#8f8c85]">
+                    <p className="text-xs text-ss-muted">
                         By publishing, you confirm you have permission to host at this address and agree to the
                         StudioSpace Host Terms.
                     </p>
@@ -505,7 +474,7 @@ return (
                         <h3 className="text-xl font-semibold leading-snug tracking-tight">
                             Your next chapter starts here.
                         </h3>
-                        <p className="mt-3 text-[13px] leading-relaxed text-[#b9b5ad]">
+                        <p className="mt-3 text-[13px] leading-relaxed text-ss-faint">
                             Beautiful photos and honest details help the right creatives find you. Take a little
                             time now. Make a great first impression.
                         </p>
@@ -514,25 +483,25 @@ return (
                                 ["Clear, memorable name", !!form.title.trim()],
                                 ["Transparent hourly pricing", parseFloat(form.hourlyRate) > 0],
                                 ["Accurate address", !!form.address.trim()],
-                                ["A quality cover photo", !!form.imageUrl.trim() && !imageFailed],
+                                ["A quality cover photo", !!form.imageUrl.trim()],
                                 ["Amenities & overview", form.amenities.length > 0 && form.overview.length >= 40],
                             ].map(([label, done]) => (
                                 <li key={label as string} className="flex items-center gap-2">
-                                    <span className={done ? "text-[#FF7A45]" : "text-[#6a665f]"}>✓</span>
-                                    <span className={done ? "" : "text-[#b9b5ad]"}>{label as string}</span>
+                                    <span className={done ? "text-[#FF7A45]" : "text-ss-muted"}>✓</span>
+                                    <span className={done ? "" : "text-ss-faint"}>{label as string}</span>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
-                    <div className="rounded-2xl border border-[#e7e3db] bg-white p-6">
+                    <div className="rounded-2xl border border-ss-line bg-ss-surface p-6">
                         <h3 className="text-lg font-semibold tracking-tight">A host, not alone.</h3>
-                        <p className="mt-2 text-[13px] text-[#7a776f]">
+                        <p className="mt-2 text-[13px] text-ss-muted">
                             Our team can help with your listing, pricing, or first booking.
                         </p>
                         <a
                             href="/support/hosts"
-                            className="mt-4 inline-block text-[13px] font-medium text-[#FF5A1F] hover:underline"
+                            className="mt-4 inline-block text-[13px] font-medium text-brand hover:underline"
                         >
                             Talk to host support ↗
                         </a>

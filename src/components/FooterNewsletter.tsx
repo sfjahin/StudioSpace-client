@@ -32,7 +32,7 @@ export default function FooterNewsletter() {
         <button
           type="submit"
           aria-label="Subscribe to the newsletter"
-          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand text-white transition-colors hover:bg-[#e64d25]"
+          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-brand text-white transition-colors hover:bg-brand-dark"
         >
           <ArrowRight className="h-4 w-4" />
         </button>

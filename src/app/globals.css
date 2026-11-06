@@ -9,6 +9,16 @@
   --color-foreground: var(--foreground);
   --color-brand: #ff592c;
   --color-brand-foreground: #ffffff;
+  --color-brand-dark: #e84e15;
+  --color-ss-bg: var(--ss-bg);
+  --color-ss-surface: var(--ss-surface);
+  --color-ss-ink: var(--ss-ink);
+  --color-ss-soft: var(--ss-soft);
+  --color-ss-muted: var(--ss-muted);
+  --color-ss-faint: var(--ss-faint);
+  --color-ss-line: var(--ss-line);
+  --color-ss-sunk: var(--ss-sunk);
+  --color-ss-hover: var(--ss-hover);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
@@ -129,4 +139,46 @@
   html {
     @apply font-sans;
   }
+}
+/* StudioSpace theme tokens — flipped by the .dark class (see ThemeProvider). */
+:root {
+  --ss-bg: #f7f5f1;
+  --ss-surface: #ffffff;
+  --ss-ink: #1b1b1a;
+  --ss-soft: #4d4a45;
+  --ss-muted: #7a776f;
+  --ss-faint: #a8a59e;
+  --ss-line: #e7e3db;
+  --ss-sunk: #eeeae2;
+  --ss-hover: #f3f0ea;
+}
+
+.dark {
+  color-scheme: dark;
+  --ss-bg: #121211;
+  --ss-surface: #1c1c1a;
+  --ss-ink: #f4f2ee;
+  --ss-soft: #d1cdc5;
+  --ss-muted: #a19e96;
+  --ss-faint: #6f6c66;
+  --ss-line: #33322f;
+  --ss-sunk: #2a2927;
+  --ss-hover: #262523;
+  /* Flip the zinc scale so older zinc-* utilities follow the theme too. */
+  --color-zinc-50: #18181b;
+  --color-zinc-100: #27272a;
+  --color-zinc-200: #3f3f46;
+  --color-zinc-300: #52525b;
+  --color-zinc-400: #a1a1aa;
+  --color-zinc-500: #a1a1aa;
+  --color-zinc-600: #d4d4d8;
+  --color-zinc-700: #e4e4e7;
+  --color-zinc-800: #f4f4f5;
+  --color-zinc-900: #fafafa;
+  --color-zinc-950: #ffffff;
+}
+
+body {
+  background: var(--ss-bg);
+  color: var(--ss-ink);
 }

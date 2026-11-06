@@ -18,8 +18,8 @@ function Stars({ rating, className }: { rating: number; className?: string }) {
                     key={n}
                     className={
                         n <= Math.round(rating)
-                            ? "inline-block size-3.5 fill-[#1b1b1a] text-[#1b1b1a]"
-                            : "inline-block size-3.5 fill-[#e7e3db] text-[#e7e3db]"
+                            ? "inline-block size-3.5 fill-ss-ink text-ss-ink"
+                            : "inline-block size-3.5 fill-ss-line text-ss-line"
                     }
                     aria-hidden
                 />
@@ -37,17 +37,17 @@ export default function ReviewsSection({ reviews, rating, scores }: Props) {
         <section aria-labelledby="reviews-heading">
             <h2
                 id="reviews-heading"
-                className="flex items-center gap-2 text-2xl font-semibold tracking-tight text-[#1b1b1a]"
+                className="flex items-center gap-2 text-2xl font-semibold tracking-tight text-ss-ink"
             >
-                <Star className="size-6 fill-[#1b1b1a] text-[#1b1b1a]" aria-hidden />
+                <Star className="size-6 fill-ss-ink text-ss-ink" aria-hidden />
                 {rating.toFixed(2)} · {reviews.length} creative experiences
             </h2>
 
             <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm">
                 {scores.map((s) => (
-                    <p key={s.label} className="text-[#4d4a45]">
-                        <span className="font-medium text-[#1b1b1a]">{s.label}</span>{" "}
-                        <span className="ml-1 font-semibold text-[#1b1b1a]">{s.value}</span>
+                    <p key={s.label} className="text-ss-soft">
+                        <span className="font-medium text-ss-ink">{s.label}</span>{" "}
+                        <span className="ml-1 font-semibold text-ss-ink">{s.value}</span>
                     </p>
                 ))}
             </div>
@@ -56,14 +56,14 @@ export default function ReviewsSection({ reviews, rating, scores }: Props) {
                 {visible.map((r) => (
                     <li key={r.id}>
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                            <span className="text-sm font-semibold text-[#1b1b1a]">{r.name}</span>
-                            <span className="text-[#c9c5bc]" aria-hidden>
+                            <span className="text-sm font-semibold text-ss-ink">{r.name}</span>
+                            <span className="text-ss-faint" aria-hidden>
                                 ·
                             </span>
                             <Stars rating={r.rating} />
                         </div>
-                        <p className="mt-1 text-[13px] text-[#8f8c85]">{r.date}</p>
-                        <p className="mt-2 text-[15px] leading-relaxed text-[#4d4a45]">{r.text}</p>
+                        <p className="mt-1 text-[13px] text-ss-muted">{r.date}</p>
+                        <p className="mt-2 text-[15px] leading-relaxed text-ss-soft">{r.text}</p>
                     </li>
                 ))}
             </ul>
@@ -72,7 +72,7 @@ export default function ReviewsSection({ reviews, rating, scores }: Props) {
                 <button
                     type="button"
                     onClick={() => setExpanded((v) => !v)}
-                    className="mt-6 rounded-xl border border-[#e7e3db] bg-white px-5 py-3 text-sm font-medium text-[#1b1b1a] transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
+                    className="mt-6 rounded-xl border border-ss-line bg-ss-surface px-5 py-3 text-sm font-medium text-ss-ink transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
                 >
                     {expanded
                         ? "Show fewer reviews"

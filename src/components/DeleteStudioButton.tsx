@@ -4,7 +4,7 @@ import { useTransition, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Dialog } from "@base-ui/react/dialog";
 import { Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import type { Studio } from "@/lib/api";
 import { deleteStudioAction, type DeleteStudioState } from "@/app/studios/[id]/actions";
 
@@ -43,7 +43,7 @@ export default function DeleteStudioButton({ studio }: { studio: Studio }) {
             <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-ss-surface px-4 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
             >
                 <Trash2 className="size-4" aria-hidden />
                 Delete listing
@@ -51,12 +51,12 @@ export default function DeleteStudioButton({ studio }: { studio: Studio }) {
 
             <Dialog.Portal>
                 <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/50" />
-                <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl outline-none">
-                    <Dialog.Title className="text-xl font-semibold tracking-tight text-[#1b1b1a]">
+                <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-ss-surface p-6 shadow-2xl outline-none">
+                    <Dialog.Title className="text-xl font-semibold tracking-tight text-ss-ink">
                         Delete this listing?
                     </Dialog.Title>
-                    <Dialog.Description className="mt-2 text-sm leading-relaxed text-[#7a776f]">
-                        <span className="font-medium text-[#1b1b1a]">{studio.title}</span> will be
+                    <Dialog.Description className="mt-2 text-sm leading-relaxed text-ss-muted">
+                        <span className="font-medium text-ss-ink">{studio.title}</span> will be
                         permanently removed from MongoDB. This can&apos;t be undone — bookings and
                         listing details won&apos;t be recoverable.
                     </Dialog.Description>
@@ -74,7 +74,7 @@ export default function DeleteStudioButton({ studio }: { studio: Studio }) {
                         <input type="hidden" name="id" value={studio.id} />
                         <Dialog.Close
                             disabled={pending}
-                            className="rounded-xl border border-[#e7e3db] bg-white py-3 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 disabled:opacity-60"
+                            className="rounded-xl border border-ss-line bg-ss-surface py-3 text-sm font-medium transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:opacity-60"
                         >
                             Cancel
                         </Dialog.Close>

@@ -1,40 +1,43 @@
-<<<<<<< HEAD
-# StudioSpace
-=======
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StudioSpace — Peer-to-Peer Creative Workspace Platform
 
-## Getting Started
+**Live site:** https://your-studiospace-client.vercel.app  *(replace with your deployed URL)*
+**API server:** https://your-studiospace-server.vercel.app  *(replace with your deployed URL)*
 
-First, run the development server:
+StudioSpace is a marketplace where creators discover, compare and book photo studios, film stages, podcast lounges, music suites and workshops by the hour, and where hosts list and manage their spaces.
+
+## Features
+
+- **Studio CRUD** — add, view, edit and delete listings with image upload (imgbb), amenities tags and read-only host info; deletes go through a confirmation modal.
+- **Explore & filter** — search by name, city or amenity, filter by category (deep-linkable: `/studios?category=Music%20Suite`) and sort by price.
+- **Booking system** — price breakdown with service fee, bookings saved as `Pending`, status badges and cancel-while-pending.
+- **Double-booking prevention** — the server rejects any request that overlaps an existing *Confirmed* booking on the same studio and date, with a clear message.
+- **Host dashboard** — stats plus booking requests where hosts Confirm, Complete or Decline.
+- **Light / dark theme** — one toggle in the navbar, remembered across visits, no flash on load.
+- **Polish** — Swiper hero slider, skeleton loaders, custom 404, friendly empty states, Sonner toasts and modal dialogs (no `alert()`), fully responsive.
+
+## Tech stack
+
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · shadcn/ui + Base UI · Swiper · Sonner · Lucide icons
+Server: Express 5 · MongoDB (native driver) · deployed on Vercel
+
+## Local setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <client-repo-url> studiospace && cd studiospace
+npm install
+echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
+echo "NEXT_PUBLIC_IMGBB_API_KEY=<your imgbb key>" >> .env.local    # free key: api.imgbb.com
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Start the API first (see the server repo README), then verify with `npm run lint`, `npx tsc --noEmit` and `npm run build`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Examiner access
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Sign-in is not enabled in this build. Every private route (`/dashboard`, `/add-studio`, `/my-listings`, `/my-bookings`, `/studios/edit/[id]`) is open and acts as the demo host:
 
-## Learn More
+| Name | Email |
+| --- | --- |
+| Maya Chen | maya@example.com |
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
->>>>>>> ddb4cae (Initial commit from Create Next App)
+To test double-booking: create a studio, book a slot, open **Dashboard → Confirm**, then book an overlapping time on the same date.

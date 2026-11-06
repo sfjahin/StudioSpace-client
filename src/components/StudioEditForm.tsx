@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import {
     ApiError,
     CATEGORIES,
@@ -11,7 +11,8 @@ import {
     type FieldErrors,
     type Studio,
 } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/auth-client";
+import ImageUploadField from "./ImageUploadField";
 
 /* --------------------------------- Data ---------------------------------- */
 
@@ -62,9 +63,9 @@ function toFormState(studio: Studio): FormState {
 /* ------------------------------ UI primitives ----------------------------- */
 
 const fieldBox =
-    "rounded-xl border bg-white px-4 pb-3 pt-3 transition-colors focus-within:border-[#FF5A1F] focus-within:ring-2 focus-within:ring-[#FF5A1F]/20";
+    "rounded-xl border bg-ss-surface px-4 pb-3 pt-3 transition-colors focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20";
 const inputCls =
-    "mt-1 w-full bg-transparent text-[15px] text-[#1b1b1a] outline-none placeholder:text-[#a8a59e]";
+    "mt-1 w-full bg-transparent text-[15px] text-ss-ink outline-none placeholder:text-ss-faint";
 
 function Field({
     label,
@@ -81,11 +82,11 @@ function Field({
 }) {
     return (
         <label
-            className={`${fieldBox} block ${error ? "border-red-400" : "border-[#e7e3db]"}`}
+            className={`${fieldBox} block ${error ? "border-red-400" : "border-ss-line"}`}
         >
-            <span className="block text-[11px] font-medium text-[#6f6c66]">
+            <span className="block text-[11px] font-medium text-ss-muted">
                 {label}
-                {required && <span className="text-[#FF5A1F]"> *</span>}
+                {required && <span className="text-brand"> *</span>}
             </span>
             {children}
             {error ? (
@@ -93,7 +94,7 @@ function Field({
                     {error}
                 </span>
             ) : hint ? (
-                <span className="mt-1 block text-[11px] text-[#8f8c85]">{hint}</span>
+                <span className="mt-1 block text-[11px] text-ss-muted">{hint}</span>
             ) : null}
         </label>
     );
@@ -109,9 +110,9 @@ function Section({
     children: React.ReactNode;
 }) {
     return (
-        <section className="rounded-2xl border border-[#e7e3db] bg-white p-5 sm:p-6">
-            <h2 className="text-lg font-semibold tracking-tight text-[#1b1b1a]">{title}</h2>
-            <p className="mt-1.5 text-sm text-[#7a776f]">{description}</p>
+        <section className="rounded-2xl border border-ss-line bg-ss-surface p-5 sm:p-6">
+            <h2 className="text-lg font-semibold tracking-tight text-ss-ink">{title}</h2>
+            <p className="mt-1.5 text-sm text-ss-muted">{description}</p>
             <div className="mt-4 space-y-4">{children}</div>
         </section>
     );
@@ -135,7 +136,6 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
     const [errors, setErrors] = useState<FieldErrors>({});
     const [submitting, setSubmitting] = useState(false);
     const [status, setStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
-    const [imageFailed, setImageFailed] = useState(false);
 
     const set = <K extends keyof FormState>(key: K, value: FormState[K]) => {
         setForm((f) => ({ ...f, [key]: value }));
@@ -157,8 +157,8 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
     const example = rate > 0 ? priceBreakdown(rate) : null;
 
     // Host info is read-only: prefer what's on the listing, fall back to the account.
-    const hostName = studio.hostName || user?.name || "";
-    const hostEmail = studio.hostEmail || user?.email || "";
+    const ownerName = studio.ownerName || user?.name || "";
+    const ownerEmail = studio.ownerEmail || user?.email || "";
 
     const validate = () => {
         const e: FieldErrors = {};
@@ -342,38 +342,12 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                 title="04 / Let your space speak"
                 description="Lead with a wide, naturally lit view of your space."
             >
-                <Field label="Image URL" required error={errors.imageUrl}>
-                    <input
-                        type="url"
-                        className={inputCls}
-                        value={form.imageUrl}
-                        onChange={(e) => {
-                            set("imageUrl", e.target.value);
-                            setImageFailed(false);
-                        }}
-                        placeholder="https://your-site.com/studio-photo.jpg"
-                    />
-                </Field>
-                {form.imageUrl.trim() && (
-                    <div className="overflow-hidden rounded-xl border border-[#e7e3db] bg-[#f0ece4]">
-                        {imageFailed ? (
-                            <p className="px-4 py-10 text-center text-xs text-[#7a776f]">
-                                We couldn&apos;t load that image. Check the link and try again.
-                            </p>
-                        ) : (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                                src={form.imageUrl}
-                                alt="Studio cover preview"
-                                className="h-48 w-full object-cover"
-                                onError={() => setImageFailed(true)}
-                            />
-                        )}
-                        <p className="border-t border-[#e7e3db] bg-white px-3 py-2 text-[11px] text-[#7a776f]">
-                            Cover photo preview
-                        </p>
-                    </div>
-                )}
+                <ImageUploadField
+                    value={form.imageUrl}
+                    onChange={(url) => set("imageUrl", url)}
+                    error={errors.imageUrl}
+                    previewClassName="h-48"
+                />
             </Section>
 
             {/* 05 Amenities */}
@@ -393,7 +367,7 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                                     className="peer sr-only"
                                 />
                                 <span
-                                    className={`grid h-4 w-4 place-items-center rounded border text-[10px] leading-none text-white transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF5A1F]/40 ${on ? "border-[#FF5A1F] bg-[#FF5A1F]" : "border-[#cfcac0] bg-white"
+                                    className={`grid h-4 w-4 place-items-center rounded border text-[10px] leading-none text-white transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-brand/40 ${on ? "border-brand bg-brand" : "border-[#cfcac0] bg-ss-surface"
                                         }`}
                                     aria-hidden
                                 >
@@ -433,20 +407,20 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                 description="Host information is managed by StudioSpace and can't be edited here."
             >
                 <div className="grid gap-4 sm:grid-cols-2">
-                    <label className="block rounded-xl border border-[#e7e3db] bg-[#f3f0ea] px-4 pb-3 pt-3">
-                        <span className="block text-[11px] font-medium text-[#6f6c66]">Host name</span>
+                    <label className="block rounded-xl border border-ss-line bg-ss-hover px-4 pb-3 pt-3">
+                        <span className="block text-[11px] font-medium text-ss-muted">Host name</span>
                         <input
                             readOnly
-                            value={hostName}
-                            className={`${inputCls} cursor-not-allowed text-[#6f6c66]`}
+                            value={ownerName}
+                            className={`${inputCls} cursor-not-allowed text-ss-muted`}
                         />
                     </label>
-                    <label className="block rounded-xl border border-[#e7e3db] bg-[#f3f0ea] px-4 pb-3 pt-3">
-                        <span className="block text-[11px] font-medium text-[#6f6c66]">Host email</span>
+                    <label className="block rounded-xl border border-ss-line bg-ss-hover px-4 pb-3 pt-3">
+                        <span className="block text-[11px] font-medium text-ss-muted">Host email</span>
                         <input
                             readOnly
-                            value={hostEmail}
-                            className={`${inputCls} cursor-not-allowed text-[#6f6c66]`}
+                            value={ownerEmail}
+                            className={`${inputCls} cursor-not-allowed text-ss-muted`}
                         />
                     </label>
                 </div>
@@ -458,14 +432,14 @@ export default function StudioEditForm({ studio, variant = "page", onCancel }: P
                     type="button"
                     onClick={onCancel}
                     disabled={submitting}
-                    className="rounded-xl border border-[#e7e3db] bg-white py-3.5 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 disabled:opacity-60"
+                    className="rounded-xl border border-ss-line bg-ss-surface py-3.5 text-sm font-medium transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:opacity-60"
                 >
                     Cancel
                 </button>
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="rounded-xl bg-[#FF5A1F] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2 disabled:opacity-60"
+                    className="rounded-xl bg-brand py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2 disabled:opacity-60"
                 >
                     {submitting ? "Saving…" : "Save changes"}
                 </button>

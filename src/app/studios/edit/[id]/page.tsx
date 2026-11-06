@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { ApiError, getStudio, type Studio } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/auth-client";
 import StudioEditForm from "@/components/StudioEditForm";
 
 /* ------------------------------ Private route ----------------------------- */
@@ -46,30 +46,30 @@ export default function EditStudioPage({ params }: PageProps<"/studios/edit/[id]
 
     if (loading || !user) {
         return (
-            <div className="grid min-h-screen place-items-center bg-[#f7f5f1] text-sm text-[#7a776f]">
+            <div className="grid min-h-screen place-items-center bg-ss-bg text-sm text-ss-muted">
                 Checking your account…
             </div>
         );
     }
 
     return (
-        <main className="min-h-screen bg-[#f7f5f1] text-[#1b1b1a]">
+        <main className="min-h-screen bg-ss-bg text-ss-ink">
             <div className="mx-auto max-w-3xl px-5 pb-20 pt-10 sm:px-8">
                 {/* Header */}
                 <header className="mb-8">
-                    <p className="text-xs font-medium tracking-wide text-[#FF5A1F]">
+                    <p className="text-xs font-medium tracking-wide text-brand">
                         Host workspace / Edit listing
                     </p>
                     <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
                         Update your listing.
                     </h1>
-                    <p className="mt-2 max-w-xl text-[15px] text-[#7a776f]">
+                    <p className="mt-2 max-w-xl text-[15px] text-ss-muted">
                         Keep prices, photos and details fresh so creatives always know what
                         they&apos;re booking.
                     </p>
                     <Link
                         href={`/studios/${id}`}
-                        className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#FF5A1F] transition-colors hover:text-[#e84e15]"
+                        className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand transition-colors hover:text-brand-dark"
                     >
                         <ArrowLeft className="size-4" aria-hidden />
                         Back to listing
@@ -81,7 +81,7 @@ export default function EditStudioPage({ params }: PageProps<"/studios/edit/[id]
                         <p className="text-sm font-medium text-red-800">{loadError}</p>
                         <Link
                             href="/my-listings"
-                            className="mt-4 inline-block text-sm font-medium text-[#FF5A1F] hover:underline"
+                            className="mt-4 inline-block text-sm font-medium text-brand hover:underline"
                         >
                             Go to my listings
                         </Link>
@@ -89,9 +89,9 @@ export default function EditStudioPage({ params }: PageProps<"/studios/edit/[id]
                 ) : !studio ? (
                     <div className="space-y-4" role="status">
                         <span className="sr-only">Loading your listing…</span>
-                        <div className="h-20 animate-pulse rounded-2xl bg-[#eeeae2]" aria-hidden />
-                        <div className="h-72 animate-pulse rounded-2xl bg-[#eeeae2]" aria-hidden />
-                        <div className="h-72 animate-pulse rounded-2xl bg-[#eeeae2]" aria-hidden />
+                        <div className="h-20 animate-pulse rounded-2xl bg-ss-sunk" aria-hidden />
+                        <div className="h-72 animate-pulse rounded-2xl bg-ss-sunk" aria-hidden />
+                        <div className="h-72 animate-pulse rounded-2xl bg-ss-sunk" aria-hidden />
                     </div>
                 ) : (
                     <StudioEditForm

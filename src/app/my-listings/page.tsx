@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Pencil, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import {
     ApiError,
     deleteStudio,
@@ -12,7 +12,7 @@ import {
     listStudios,
     type Studio,
 } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/auth-client";
 
 /* --------------------------------- Cards --------------------------------- */
 
@@ -24,10 +24,10 @@ function ListingCard({
     onRequestDelete: (studio: Studio) => void;
 }) {
     return (
-        <article className="flex flex-col overflow-hidden rounded-2xl border border-[#e7e3db] bg-white">
+        <article className="flex flex-col overflow-hidden rounded-2xl border border-ss-line bg-ss-surface">
             <Link
                 href={`/studios/${studio.id}`}
-                className="group aspect-[4/3] overflow-hidden bg-[#f0ece4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
+                className="group aspect-[4/3] overflow-hidden bg-ss-sunk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
             >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -39,10 +39,10 @@ function ListingCard({
             <div className="flex flex-1 flex-col p-5">
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                        <p className="text-[11px] font-medium uppercase tracking-wide text-[#FF5A1F]">
+                        <p className="text-[11px] font-medium uppercase tracking-wide text-brand">
                             {studio.category}
                         </p>
-                        <h2 className="mt-1.5 truncate text-lg font-semibold tracking-tight text-[#1b1b1a]">
+                        <h2 className="mt-1.5 truncate text-lg font-semibold tracking-tight text-ss-ink">
                             {studio.title}
                         </h2>
                     </div>
@@ -50,34 +50,34 @@ function ListingCard({
                         Live
                     </span>
                 </div>
-                <p className="mt-1 line-clamp-2 text-sm text-[#7a776f]">{studio.address}</p>
+                <p className="mt-1 line-clamp-2 text-sm text-ss-muted">{studio.address}</p>
                 <div className="mt-4 flex items-center justify-between text-sm">
-                    <span className="font-semibold text-[#1b1b1a]">
+                    <span className="font-semibold text-ss-ink">
                         {formatMoney(studio.hourlyRate)}
-                        <span className="font-normal text-[#7a776f]"> / hour</span>
+                        <span className="font-normal text-ss-muted"> / hour</span>
                     </span>
-                    <span className="text-[#7a776f]">Fits {studio.maxCapacity}</span>
+                    <span className="text-ss-muted">Fits {studio.maxCapacity}</span>
                 </div>
 
                 {/* Actions: view / update / delete */}
-                <div className="mt-4 grid gap-2 border-t border-[#e7e3db] pt-4 sm:grid-cols-2">
+                <div className="mt-4 grid gap-2 border-t border-ss-line pt-4 sm:grid-cols-2">
                     <Link
                         href={`/studios/${studio.id}`}
-                        className="rounded-xl border border-[#e7e3db] bg-white py-2.5 text-center text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
+                        className="rounded-xl border border-ss-line bg-ss-surface py-2.5 text-center text-sm font-medium transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
                     >
                         View
                     </Link>
                     <Link
                         href={`/studios/edit/${studio.id}`}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#e7e3db] bg-white py-2.5 text-sm font-medium text-[#1b1b1a] transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-ss-line bg-ss-surface py-2.5 text-sm font-medium text-ss-ink transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
                     >
-                        <Pencil className="size-3.5 text-[#FF5A1F]" aria-hidden />
+                        <Pencil className="size-3.5 text-brand" aria-hidden />
                         Update
                     </Link>
                     <button
                         type="button"
                         onClick={() => onRequestDelete(studio)}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-white py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 sm:col-span-2"
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-ss-surface py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 sm:col-span-2"
                     >
                         <Trash2 className="size-3.5" aria-hidden />
                         Delete
@@ -137,14 +137,14 @@ function DeleteConfirmDialog({
         >
             <Dialog.Portal>
                 <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/50" />
-                <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl outline-none">
-                    <Dialog.Title className="text-xl font-semibold tracking-tight text-[#1b1b1a]">
+                <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-ss-surface p-6 shadow-2xl outline-none">
+                    <Dialog.Title className="text-xl font-semibold tracking-tight text-ss-ink">
                         Delete this listing?
                     </Dialog.Title>
-                    <Dialog.Description className="mt-2 text-sm leading-relaxed text-[#7a776f]">
+                    <Dialog.Description className="mt-2 text-sm leading-relaxed text-ss-muted">
                         {studio ? (
                             <>
-                                <span className="font-medium text-[#1b1b1a]">{studio.title}</span>{" "}
+                                <span className="font-medium text-ss-ink">{studio.title}</span>{" "}
                                 will be permanently removed from MongoDB. This can&apos;t be
                                 undone — bookings and listing details won&apos;t be recoverable.
                             </>
@@ -163,7 +163,7 @@ function DeleteConfirmDialog({
                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
                         <Dialog.Close
                             disabled={submitting}
-                            className="rounded-xl border border-[#e7e3db] bg-white py-3 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 disabled:opacity-60"
+                            className="rounded-xl border border-ss-line bg-ss-surface py-3 text-sm font-medium transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:opacity-60"
                         >
                             Cancel
                         </Dialog.Close>
@@ -188,13 +188,13 @@ function ListingsSkeleton() {
             {[0, 1, 2].map((i) => (
                 <div
                     key={i}
-                    className="animate-pulse overflow-hidden rounded-2xl border border-[#e7e3db] bg-white"
+                    className="animate-pulse overflow-hidden rounded-2xl border border-ss-line bg-ss-surface"
                 >
-                    <div className="aspect-[4/3] bg-[#eeeae2]" />
+                    <div className="aspect-[4/3] bg-ss-sunk" />
                     <div className="space-y-3 p-5">
-                        <div className="h-3 w-24 rounded bg-[#eeeae2]" />
-                        <div className="h-5 w-3/4 rounded bg-[#eeeae2]" />
-                        <div className="h-3 w-1/2 rounded bg-[#eeeae2]" />
+                        <div className="h-3 w-24 rounded bg-ss-sunk" />
+                        <div className="h-5 w-3/4 rounded bg-ss-sunk" />
+                        <div className="h-3 w-1/2 rounded bg-ss-sunk" />
                     </div>
                 </div>
             ))}
@@ -217,18 +217,18 @@ export default function MyListingsPage() {
         if (!loading && !user) router.replace("/login?next=/my-listings");
     }, [loading, user, router]);
 
-    // Load this owner's listings (owner email match — stored as hostEmail).
+    // Load this owner's listings: the server filters by ownerEmail, and we double-check here.
     useEffect(() => {
         if (!user) return;
         let cancelled = false;
 
-        listStudios()
+        listStudios({ ownerEmail: user.email })
             .then((all) => {
                 if (cancelled) return;
                 const mine = all.filter(
                     (s) =>
-                        !!s.hostEmail &&
-                        s.hostEmail.toLowerCase() === user.email.toLowerCase()
+                        !!s.ownerEmail &&
+                        s.ownerEmail.toLowerCase() === user.email.toLowerCase()
                 );
                 setStudios(mine);
             })
@@ -249,32 +249,32 @@ export default function MyListingsPage() {
 
     if (loading || !user) {
         return (
-            <div className="grid min-h-screen place-items-center bg-[#f7f5f1] text-sm text-[#7a776f]">
+            <div className="grid min-h-screen place-items-center bg-ss-bg text-sm text-ss-muted">
                 Checking your account…
             </div>
         );
     }
 
     return (
-        <main className="flex-1 bg-[#f7f5f1] text-[#1b1b1a]">
+        <main className="flex-1 bg-ss-bg text-ss-ink">
             <div className="mx-auto max-w-6xl px-5 pb-20 pt-10 sm:px-8">
                 {/* Header */}
                 <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
                     <div>
-                        <p className="text-xs font-medium tracking-wide text-[#FF5A1F]">
+                        <p className="text-xs font-medium tracking-wide text-brand">
                             Host workspace / My listings
                         </p>
                         <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
                             Your listings.
                         </h1>
-                        <p className="mt-2 max-w-xl text-[15px] text-[#7a776f]">
+                        <p className="mt-2 max-w-xl text-[15px] text-ss-muted">
                             Everything you publish with {user.email} — update details or remove
                             a listing whenever you need.
                         </p>
                     </div>
                     <Link
                         href="/add-studio"
-                        className="rounded-xl bg-[#FF5A1F] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2"
+                        className="rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2"
                     >
                         List your studio
                     </Link>
@@ -292,16 +292,16 @@ export default function MyListingsPage() {
                         </p>
                     </div>
                 ) : studios.length === 0 ? (
-                    <div className="rounded-2xl border border-[#e7e3db] bg-white px-6 py-16 text-center">
-                        <h2 className="text-xl font-semibold tracking-tight text-[#1b1b1a]">
+                    <div className="rounded-2xl border border-ss-line bg-ss-surface px-6 py-16 text-center">
+                        <h2 className="text-xl font-semibold tracking-tight text-ss-ink">
                             No listings yet.
                         </h2>
-                        <p className="mt-2 text-sm text-[#7a776f]">
+                        <p className="mt-2 text-sm text-ss-muted">
                             Studios you publish will show up here, ready to update any time.
                         </p>
                         <Link
                             href="/add-studio"
-                            className="mt-6 inline-block rounded-xl bg-[#FF5A1F] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15]"
+                            className="mt-6 inline-block rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
                         >
                             List your studio
                         </Link>

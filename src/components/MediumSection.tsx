@@ -1,36 +1,37 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 const mediums = [
   {
-    title: "Photography",
+    title: "Photo Studios",
     subtitle: "Light, angles, possibility.",
     image: "/images/medium-photo.jpg",
-    href: "/studios/photography",
+    href: "/studios?category=Photo%20Studio",
   },
   {
-    title: "Film & video",
+    title: "Sound Stages",
     subtitle: "Set the scene.",
     image: "/images/medium-film.jpg",
-    href: "/studios/film-video",
+    href: "/studios?category=Film%20Stage",
   },
   {
-    title: "Podcast",
+    title: "Podcast Rooms",
     subtitle: "Conversations worth hearing.",
     image: "/images/medium-podcast.jpg",
-    href: "/studios/podcast",
+    href: "/studios?category=Podcast%20Lounge",
   },
   {
-    title: "Music",
+    title: "Music Suites",
     subtitle: "Find your frequency.",
     image: "/images/medium-music.jpg",
-    href: "/studios/music",
+    href: "/studios?category=Music%20Suite",
   },
   {
-    title: "Art & making",
+    title: "Art Workshops",
     subtitle: "Make room for the unexpected.",
     image: "/images/medium-art.jpg",
-    href: "/studios/art-making",
+    href: "/studios?category=Workshop",
   },
 ];
 
@@ -38,7 +39,7 @@ export default function MediumSection() {
   return (
     <section className="mx-auto w-full max-w-7xl px-6 py-16">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-        Find your medium
+        Browse by category
       </p>
       <h2 className="mt-4 text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">
         Whatever you make, make it here.
@@ -46,7 +47,7 @@ export default function MediumSection() {
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {mediums.map((medium) => (
-          <a
+          <Link
             key={medium.title}
             href={medium.href}
             className="group relative aspect-[6/5] overflow-hidden rounded-xl bg-zinc-900"
@@ -68,7 +69,7 @@ export default function MediumSection() {
                 {medium.subtitle}
               </span>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </section>

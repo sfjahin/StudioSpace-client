@@ -30,7 +30,7 @@ export default function StudioGallery({ images, alt }: Props) {
         <div className="space-y-3">
             <div className="grid gap-3 lg:grid-cols-[2fr_1fr]">
                 {/* Main stage */}
-                <div className="group relative aspect-[16/10] overflow-hidden rounded-2xl border border-[#e7e3db] bg-[#f0ece4] lg:aspect-auto lg:h-full lg:min-h-[360px]">
+                <div className="group relative aspect-[16/10] overflow-hidden rounded-2xl border border-ss-line bg-ss-sunk lg:aspect-auto lg:h-full lg:min-h-[360px]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={stage}
@@ -44,7 +44,7 @@ export default function StudioGallery({ images, alt }: Props) {
                                 type="button"
                                 aria-label="Previous photo"
                                 onClick={() => go(-1)}
-                                className="absolute left-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1b1b1a] shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/50"
+                                className="absolute left-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ss-ink shadow-sm transition hover:bg-ss-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
                             >
                                 <ChevronLeft className="size-5" />
                             </button>
@@ -52,7 +52,7 @@ export default function StudioGallery({ images, alt }: Props) {
                                 type="button"
                                 aria-label="Next photo"
                                 onClick={() => go(1)}
-                                className="absolute right-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1b1b1a] shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/50"
+                                className="absolute right-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ss-ink shadow-sm transition hover:bg-ss-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
                             >
                                 <ChevronRight className="size-5" />
                             </button>
@@ -66,7 +66,7 @@ export default function StudioGallery({ images, alt }: Props) {
                     <button
                         type="button"
                         onClick={() => setOpen(true)}
-                        className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-white px-3.5 py-2 text-[13px] font-medium text-[#1b1b1a] shadow-sm transition hover:bg-[#f7f5f1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/50"
+                        className="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-ss-surface px-3.5 py-2 text-[13px] font-medium text-ss-ink shadow-sm transition hover:bg-ss-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
                     >
                         <Images className="size-4" />
                         View all {count} photos
@@ -81,7 +81,7 @@ export default function StudioGallery({ images, alt }: Props) {
                             type="button"
                             onClick={() => setIndex((index + 1 + i) % count)}
                             aria-label={`Show photo ${((index + 1 + i) % count) + 1}`}
-                            className="relative overflow-hidden rounded-2xl border border-[#e7e3db] bg-[#f0ece4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/50"
+                            className="relative overflow-hidden rounded-2xl border border-ss-line bg-ss-sunk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -105,8 +105,8 @@ export default function StudioGallery({ images, alt }: Props) {
                             aria-label={`Show photo ${i + 1}`}
                             aria-current={i === index}
                             className={cn(
-                                "relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 bg-[#f0ece4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/50",
-                                i === index ? "border-[#FF5A1F]" : "border-transparent opacity-70"
+                                "relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 bg-ss-sunk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50",
+                                i === index ? "border-brand" : "border-transparent opacity-70"
                             )}
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -172,7 +172,7 @@ export default function StudioGallery({ images, alt }: Props) {
                                     aria-current={i === index}
                                     className={cn(
                                         "h-14 w-20 shrink-0 overflow-hidden rounded-md border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white",
-                                        i === index ? "border-[#FF5A1F]" : "border-transparent opacity-60 hover:opacity-100"
+                                        i === index ? "border-brand" : "border-transparent opacity-60 hover:opacity-100"
                                     )}
                                 >
                                     {/* eslint-disable-next-line @next/next/no-img-element */}

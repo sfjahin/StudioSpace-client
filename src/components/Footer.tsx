@@ -31,16 +31,16 @@ const quickLinks = [
   { label: "Explore studios", href: "/studios" },
   { label: "How it works", href: "/how-it-works" },
   { label: "About us", href: "/about" },
-  { label: "Become a host", href: "/become-a-host" },
-  { label: "Help center", href: "/help" },
+  { label: "Add a studio", href: "/add-studio" },
+  { label: "My bookings", href: "/my-bookings" },
 ];
 
 const categories = [
-  { label: "Photography studios", href: "/studios/photography" },
-  { label: "Film & video spaces", href: "/studios/film-video" },
-  { label: "Podcast studios", href: "/studios/podcast" },
-  { label: "Music studios", href: "/studios/music" },
-  { label: "Art & making", href: "/studios/art-making" },
+  { label: "Photo Studios", href: "/studios?category=Photo%20Studio" },
+  { label: "Sound Stages", href: "/studios?category=Film%20Stage" },
+  { label: "Podcast Rooms", href: "/studios?category=Podcast%20Lounge" },
+  { label: "Music Suites", href: "/studios?category=Music%20Suite" },
+  { label: "Art Workshops", href: "/studios?category=Workshop" },
 ];
 
 export default function Footer() {
@@ -61,7 +61,7 @@ export default function Footer() {
                 StudioSpace<span className="text-brand">.</span>
               </span>
             </Link>
-            <p className="mt-4 max-w-[260px] text-sm leading-relaxed text-zinc-400">
+            <p className="mt-4 max-w-[260px] text-sm leading-relaxed text-white/60">
               Our mission is to give every maker room to work — remarkable
               creative spaces, booked by the hour.
             </p>
@@ -74,7 +74,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-zinc-400 transition-colors hover:border-white/40 hover:text-white"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/60 transition-colors hover:border-white/40 hover:text-white"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -95,7 +95,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-zinc-400 transition-colors hover:text-white"
+                    className="text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -111,7 +111,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="inline-flex items-center gap-1 text-sm text-zinc-400 transition-colors hover:text-white"
+                    className="inline-flex items-center gap-1 text-sm text-white/60 transition-colors hover:text-white"
                   >
                     {link.label}
                     <ArrowUpRight className="h-3.5 w-3.5" />
@@ -123,7 +123,7 @@ export default function Footer() {
 
           <div className="sm:col-span-2 lg:col-span-1">
             <h3 className="text-sm font-bold text-white">Newsletter</h3>
-            <p className="mt-4 text-sm leading-relaxed text-zinc-400">
+            <p className="mt-4 text-sm leading-relaxed text-white/60">
               Space for your next big idea, straight to your inbox.
             </p>
             <div className="mt-4">
@@ -132,15 +132,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © 2026 StudioSpace. All rights reserved. By using StudioSpace you
             agree to our{" "}
-            <a href="/terms" className="transition-colors hover:text-white">
+            <a href="/about#terms" className="transition-colors hover:text-white">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="/privacy" className="transition-colors hover:text-white">
+            <a href="/about#terms" className="transition-colors hover:text-white">
               Privacy Policy
             </a>
             .

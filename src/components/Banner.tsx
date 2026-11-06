@@ -18,7 +18,7 @@ export default function Banner() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-ss-sunk">
       <section className="container mx-auto max-w-7xl px-6 pt-8">
         <div className="relative overflow-hidden rounded-2xl bg-zinc-900">
           <div className="h-[520px] w-full sm:h-[560px]">
@@ -42,23 +42,23 @@ export default function Banner() {
               <br />
               The right space.
             </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-zinc-200 sm:text-lg">
+            <p className="mt-6 max-w-md text-base leading-relaxed text-white/85 sm:text-lg">
               Discover inspiring studios from local creatives. Book by the hour.
               Make something that matters.
             </p>
             <div className="pointer-events-auto mt-9 flex flex-wrap gap-4">
-              <a
-                href="#"
-                className="flex items-center gap-2 rounded-lg bg-brand px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#e64d25]"
+              <Link
+                href="/studios"
+                className="flex items-center gap-2 rounded-lg bg-brand px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-dark"
               >
-                Find your space
+                Explore Studios
                 <ArrowUpRight className="h-4 w-4" />
-              </a>
+              </Link>
               <Link
                 href="/add-studio"
-                className="rounded-lg bg-white px-6 py-3.5 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100"
+                className="rounded-lg bg-ss-surface px-6 py-3.5 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100"
               >
-                List your studio
+                Host Your Space
               </Link>
             </div>
           </div>
@@ -66,7 +66,7 @@ export default function Banner() {
           {/* Slide counter, label, progress + navigation. Also z-10, same reason as above. */}
           <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between px-8 pb-8 sm:px-14">
             <div>
-              <p className="text-xs font-medium text-zinc-300">
+              <p className="text-xs font-medium text-white/70">
                 {String(activeIndex + 1).padStart(2, "0")} /{" "}
                 {String(slides.length).padStart(2, "0")}
               </p>
@@ -114,11 +114,11 @@ export default function Banner() {
           <p className="font-semibold text-zinc-900">
             Good spaces. Great things happen.
           </p>
-          <p className="flex items-center gap-1.5 text-zinc-500">
+          <p className="flex items-center gap-1.5 text-white/50">
             <Star className="h-3.5 w-3.5 fill-brand text-brand" />
             4.9 from 2,400+ creatives
           </p>
-          <p className="text-zinc-500">1,200+ spaces · 24 creative cities</p>
+          <p className="text-white/50">1,200+ spaces · 24 creative cities</p>
         </div>
       </section>
     </div>

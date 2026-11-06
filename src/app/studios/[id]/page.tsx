@@ -48,24 +48,24 @@ function DetailSkeleton() {
     return (
         <div className="animate-pulse space-y-8" aria-hidden>
             <div className="space-y-3">
-                <div className="h-4 w-40 rounded bg-[#eeeae2]" />
-                <div className="h-10 w-2/3 rounded bg-[#eeeae2]" />
-                <div className="h-4 w-1/3 rounded bg-[#eeeae2]" />
+                <div className="h-4 w-40 rounded bg-ss-sunk" />
+                <div className="h-10 w-2/3 rounded bg-ss-sunk" />
+                <div className="h-4 w-1/3 rounded bg-ss-sunk" />
             </div>
             <div className="grid gap-3 lg:grid-cols-[2fr_1fr]">
-                <div className="aspect-[16/10] rounded-2xl bg-[#eeeae2]" />
+                <div className="aspect-[16/10] rounded-2xl bg-ss-sunk" />
                 <div className="hidden gap-3 lg:grid lg:grid-rows-2">
-                    <div className="rounded-2xl bg-[#eeeae2]" />
-                    <div className="rounded-2xl bg-[#eeeae2]" />
+                    <div className="rounded-2xl bg-ss-sunk" />
+                    <div className="rounded-2xl bg-ss-sunk" />
                 </div>
             </div>
             <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
                 <div className="space-y-4">
-                    <div className="h-6 w-1/2 rounded bg-[#eeeae2]" />
-                    <div className="h-4 w-full rounded bg-[#eeeae2]" />
-                    <div className="h-4 w-5/6 rounded bg-[#eeeae2]" />
+                    <div className="h-6 w-1/2 rounded bg-ss-sunk" />
+                    <div className="h-4 w-full rounded bg-ss-sunk" />
+                    <div className="h-4 w-5/6 rounded bg-ss-sunk" />
                 </div>
-                <div className="aspect-[3/4] rounded-2xl bg-[#eeeae2]" />
+                <div className="aspect-[3/4] rounded-2xl bg-ss-sunk" />
             </div>
         </div>
     );
@@ -73,9 +73,9 @@ function DetailSkeleton() {
 
 function Spec({ label, value }: { label: string; value: string }) {
     return (
-        <div className="rounded-xl border border-[#e7e3db] bg-white px-4 py-3">
-            <p className="text-[11px] font-medium uppercase tracking-wide text-[#8f8c85]">{label}</p>
-            <p className="mt-1 text-[15px] font-medium text-[#1b1b1a]">{value}</p>
+        <div className="rounded-xl border border-ss-line bg-ss-surface px-4 py-3">
+            <p className="text-[11px] font-medium uppercase tracking-wide text-ss-muted">{label}</p>
+            <p className="mt-1 text-[15px] font-medium text-ss-ink">{value}</p>
         </div>
     );
 }
@@ -139,15 +139,15 @@ async function StudioDetail({ id }: { id: string }) {
             {/* Breadcrumb */}
             <nav
                 aria-label="Breadcrumb"
-                className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-[#8f8c85]"
+                className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ss-muted"
             >
-                <Link href="/studios" className="transition-colors hover:text-[#1b1b1a]">
+                <Link href="/studios" className="transition-colors hover:text-ss-ink">
                     Explore studios
                 </Link>
                 <span aria-hidden>/</span>
                 <span>{studio.category}</span>
                 <span aria-hidden>/</span>
-                <span className="text-[#4d4a45]" aria-current="page">
+                <span className="text-ss-soft" aria-current="page">
                     {studio.title}
                 </span>
             </nav>
@@ -156,29 +156,29 @@ async function StudioDetail({ id }: { id: string }) {
             <header>
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0">
-                        <p className="inline-block rounded-md bg-[#FFF0E9] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#FF5A1F]">
+                        <p className="inline-block rounded-md bg-[#FFF0E9] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-brand">
                             Guest favorite
                         </p>
                         <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
                             {studio.title}
                         </h1>
-                        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px] text-[#4d4a45]">
-                            <span className="flex items-center gap-1.5 font-medium text-[#1b1b1a]">
+                        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px] text-ss-soft">
+                            <span className="flex items-center gap-1.5 font-medium text-ss-ink">
                                 <span aria-hidden>★</span>
                                 {rating.toFixed(2)}
-                                <span className="font-normal text-[#7a776f]">
+                                <span className="font-normal text-ss-muted">
                                     ({reviews.length} reviews)
                                 </span>
                             </span>
-                            <span className="text-[#c9c5bc]" aria-hidden>
+                            <span className="text-ss-faint" aria-hidden>
                                 ·
                             </span>
                             <span>{studio.address}</span>
-                            <span className="text-[#c9c5bc]" aria-hidden>
+                            <span className="text-ss-faint" aria-hidden>
                                 ·
                             </span>
                             <span className="flex items-center gap-1.5">
-                                <CircleCheck className="size-4 text-[#FF5A1F]" aria-hidden />
+                                <CircleCheck className="size-4 text-brand" aria-hidden />
                                 Verified space
                             </span>
                         </p>
@@ -200,26 +200,26 @@ async function StudioDetail({ id }: { id: string }) {
                     <section aria-labelledby="overview-heading">
                         <h2
                             id="overview-heading"
-                            className="text-2xl font-semibold tracking-tight text-[#1b1b1a]"
+                            className="text-2xl font-semibold tracking-tight text-ss-ink"
                         >
                             {lead}
                         </h2>
-                        <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#7a776f]">
+                        <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ss-muted">
                             <span>{squareFeet(studio).toLocaleString("en-US")} sq ft</span>
-                            <span className="text-[#c9c5bc]" aria-hidden>
+                            <span className="text-ss-faint" aria-hidden>
                                 ·
                             </span>
                             <span>Up to {studio.maxCapacity} people</span>
-                            <span className="text-[#c9c5bc]" aria-hidden>
+                            <span className="text-ss-faint" aria-hidden>
                                 ·
                             </span>
                             <span>2-hour minimum</span>
-                            <span className="text-[#c9c5bc]" aria-hidden>
+                            <span className="text-ss-faint" aria-hidden>
                                 ·
                             </span>
                             <span>{studio.category}</span>
                         </p>
-                        <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-[#4d4a45]">
+                        <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-ss-soft">
                             {paragraphs.map((p, i) => (
                                 <p key={i}>{p}</p>
                             ))}
@@ -227,13 +227,13 @@ async function StudioDetail({ id }: { id: string }) {
                         </div>
                     </section>
 
-                    <hr className="border-[#e7e3db]" />
+                    <hr className="border-ss-line" />
 
                     {/* Specifications */}
                     <section aria-labelledby="specs-heading">
                         <h2
                             id="specs-heading"
-                            className="text-2xl font-semibold tracking-tight text-[#1b1b1a]"
+                            className="text-2xl font-semibold tracking-tight text-ss-ink"
                         >
                             Workspace specifications
                         </h2>
@@ -244,13 +244,13 @@ async function StudioDetail({ id }: { id: string }) {
                         </dl>
                     </section>
 
-                    <hr className="border-[#e7e3db]" />
+                    <hr className="border-ss-line" />
 
                     {/* Amenities */}
                     <section aria-labelledby="amenities-heading">
                         <h2
                             id="amenities-heading"
-                            className="text-2xl font-semibold tracking-tight text-[#1b1b1a]"
+                            className="text-2xl font-semibold tracking-tight text-ss-ink"
                         >
                             Everything you need to get into flow.
                         </h2>
@@ -261,10 +261,10 @@ async function StudioDetail({ id }: { id: string }) {
                                     return (
                                         <li
                                             key={a}
-                                            className="flex items-center gap-3 text-[15px] text-[#4d4a45]"
+                                            className="flex items-center gap-3 text-[15px] text-ss-soft"
                                         >
                                             <Icon
-                                                className="size-4.5 shrink-0 text-[#FF5A1F]"
+                                                className="size-4.5 shrink-0 text-brand"
                                                 aria-hidden
                                             />
                                             {a}
@@ -273,22 +273,22 @@ async function StudioDetail({ id }: { id: string }) {
                                 })}
                             </ul>
                         ) : (
-                            <p className="mt-4 text-sm text-[#7a776f]">
+                            <p className="mt-4 text-sm text-ss-muted">
                                 The host hasn&apos;t listed amenities for this space yet.
                             </p>
                         )}
                     </section>
 
-                    <hr className="border-[#e7e3db]" />
+                    <hr className="border-ss-line" />
 
                     {/* Host */}
                     <section
                         aria-labelledby="host-heading"
-                        className="rounded-2xl border border-[#e7e3db] bg-white p-6"
+                        className="rounded-2xl border border-ss-line bg-ss-surface p-6"
                     >
                         <div className="flex items-start gap-4">
                             <div
-                                className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FFE9DF] text-sm font-semibold text-[#FF5A1F]"
+                                className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FFE9DF] text-sm font-semibold text-brand"
                                 aria-hidden
                             >
                                 {host.initials}
@@ -296,21 +296,21 @@ async function StudioDetail({ id }: { id: string }) {
                             <div className="min-w-0">
                                 <h2
                                     id="host-heading"
-                                    className="text-lg font-semibold tracking-tight text-[#1b1b1a]"
+                                    className="text-lg font-semibold tracking-tight text-ss-ink"
                                 >
                                     Hosted by {host.name}
                                 </h2>
-                                <p className="mt-0.5 text-sm text-[#7a776f]">{host.line}</p>
-                                <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-[#4d4a45]">
+                                <p className="mt-0.5 text-sm text-ss-muted">{host.line}</p>
+                                <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ss-soft">
                                     <span className="flex items-center gap-1.5">
-                                        <CircleCheck className="size-3.5 text-[#FF5A1F]" aria-hidden />
+                                        <CircleCheck className="size-3.5 text-brand" aria-hidden />
                                         Verified host
                                     </span>
-                                    <span className="text-[#c9c5bc]" aria-hidden>
+                                    <span className="text-ss-faint" aria-hidden>
                                         ·
                                     </span>
                                     <span>{host.responseRate}% response rate</span>
-                                    <span className="text-[#c9c5bc]" aria-hidden>
+                                    <span className="text-ss-faint" aria-hidden>
                                         ·
                                     </span>
                                     <span>Replies {host.replyTime}</span>
@@ -318,14 +318,14 @@ async function StudioDetail({ id }: { id: string }) {
                                 {host.email && (
                                     <a
                                         href={`mailto:${host.email}`}
-                                        className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-[#FF5A1F] transition-colors hover:text-[#e84e15]"
+                                        className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand transition-colors hover:text-brand-dark"
                                     >
                                         Message {host.firstName}
                                         <ArrowUpRight className="size-4" aria-hidden />
                                     </a>
                                 )}
                                 {!host.email && (
-                                    <p className="mt-3 inline-flex items-center gap-1 text-sm text-[#8f8c85]">
+                                    <p className="mt-3 inline-flex items-center gap-1 text-sm text-ss-muted">
                                         <MessageCircle className="size-4" aria-hidden />
                                         Contact via the booking form
                                     </p>
@@ -337,17 +337,17 @@ async function StudioDetail({ id }: { id: string }) {
                     {/* Reviews */}
                     <ReviewsSection reviews={reviews} rating={rating} scores={scores} />
 
-                    <hr className="border-[#e7e3db]" />
+                    <hr className="border-ss-line" />
 
                     {/* Good to know */}
                     <section aria-labelledby="good-to-know-heading">
                         <h2
                             id="good-to-know-heading"
-                            className="text-2xl font-semibold tracking-tight text-[#1b1b1a]"
+                            className="text-2xl font-semibold tracking-tight text-ss-ink"
                         >
                             Good to know before you go.
                         </h2>
-                        <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-[#4d4a45]">
+                        <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-ss-soft">
                             <p>
                                 No smoking, glitter, or open flames. Leave the space as you found
                                 it. Overtime is billed at {formatMoney(studio.hourlyRate)}/hour,
@@ -375,7 +375,7 @@ async function StudioDetail({ id }: { id: string }) {
 
 export default function StudioPage({ params }: PageProps<"/studios/[id]">) {
     return (
-        <main className="flex-1 bg-[#f7f5f1] text-[#1b1b1a]">
+        <main className="flex-1 bg-ss-bg text-ss-ink">
             <div className="mx-auto max-w-6xl px-5 pb-20 pt-8 sm:px-8">
                 <Suspense fallback={<DetailSkeleton />}>
                     <StudioDetailFromParams params={params} />
