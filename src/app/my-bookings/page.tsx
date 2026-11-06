@@ -14,11 +14,7 @@ import {
     type Booking,
     type BookingStatus,
 } from "@/lib/api";
-<<<<<<< HEAD
 import { useAuth } from "@/lib/auth-client";
-=======
-import { useAuth } from "@/lib/auth";
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
 
 /* ------------------------------ Status badge ------------------------------ */
 
@@ -33,11 +29,7 @@ function StatusBadge({ status }: { status: BookingStatus }) {
     return (
         <span
             className={`shrink-0 rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${
-<<<<<<< HEAD
                 STATUS_STYLES[status] ?? "bg-ss-hover text-ss-muted"
-=======
-                STATUS_STYLES[status] ?? "bg-[#f3f0ea] text-[#7a776f]"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
             }`}
         >
             {status}
@@ -55,19 +47,11 @@ function BookingCard({
     onRequestCancel: (booking: Booking) => void;
 }) {
     return (
-<<<<<<< HEAD
         <article className="flex flex-col overflow-hidden rounded-2xl border border-ss-line bg-ss-surface sm:flex-row">
             <Link
                 href={`/studios/${booking.studioId}`}
                 aria-label={`View ${booking.studioTitle}`}
                 className="block aspect-[16/9] shrink-0 overflow-hidden bg-ss-sunk sm:aspect-auto sm:w-56 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand/40"
-=======
-        <article className="flex flex-col overflow-hidden rounded-2xl border border-[#e7e3db] bg-white sm:flex-row">
-            <Link
-                href={`/studios/${booking.studioId}`}
-                aria-label={`View ${booking.studioTitle}`}
-                className="block aspect-[16/9] shrink-0 overflow-hidden bg-[#f0ece4] sm:aspect-auto sm:w-56 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#FF5A1F]/40"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
             >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -80,17 +64,10 @@ function BookingCard({
             <div className="flex min-w-0 flex-1 flex-col p-5">
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-<<<<<<< HEAD
                         <p className="text-[11px] font-medium uppercase tracking-wide text-brand">
                             {booking.studioCategory}
                         </p>
                         <h2 className="mt-1 truncate text-lg font-semibold tracking-tight text-ss-ink">
-=======
-                        <p className="text-[11px] font-medium uppercase tracking-wide text-[#FF5A1F]">
-                            {booking.studioCategory}
-                        </p>
-                        <h2 className="mt-1 truncate text-lg font-semibold tracking-tight text-[#1b1b1a]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                             <Link href={`/studios/${booking.studioId}`} className="hover:underline">
                                 {booking.studioTitle}
                             </Link>
@@ -99,18 +76,13 @@ function BookingCard({
                     <StatusBadge status={booking.status} />
                 </div>
 
-<<<<<<< HEAD
                 <p className="mt-1 flex items-start gap-1.5 text-sm text-ss-muted">
-=======
-                <p className="mt-1 flex items-start gap-1.5 text-sm text-[#7a776f]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                     <MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden />
                     <span className="line-clamp-1">{booking.studioAddress}</span>
                 </p>
 
                 <dl className="mt-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
                     <div className="flex items-center gap-2">
-<<<<<<< HEAD
                         <CalendarDays className="size-4 shrink-0 text-brand" aria-hidden />
                         <dt className="sr-only">Date</dt>
                         <dd className="text-ss-ink">{formatBookingDate(booking.date)}</dd>
@@ -127,29 +99,10 @@ function BookingCard({
                         <Users className="size-4 shrink-0 text-brand" aria-hidden />
                         <dt className="sr-only">Crew size</dt>
                         <dd className="text-ss-ink">
-=======
-                        <CalendarDays className="size-4 shrink-0 text-[#FF5A1F]" aria-hidden />
-                        <dt className="sr-only">Date</dt>
-                        <dd className="text-[#1b1b1a]">{formatBookingDate(booking.date)}</dd>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Clock className="size-4 shrink-0 text-[#FF5A1F]" aria-hidden />
-                        <dt className="sr-only">Time</dt>
-                        <dd className="text-[#1b1b1a]">
-                            {booking.startTime} – {booking.endTime}{" "}
-                            <span className="text-[#7a776f]">({booking.hours} hrs)</span>
-                        </dd>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Users className="size-4 shrink-0 text-[#FF5A1F]" aria-hidden />
-                        <dt className="sr-only">Crew size</dt>
-                        <dd className="text-[#1b1b1a]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                             {booking.crewSize} {booking.crewSize === 1 ? "person" : "people"}
                         </dd>
                     </div>
                     <div className="flex items-center gap-2">
-<<<<<<< HEAD
                         <span className="w-4 shrink-0 text-center font-semibold text-brand" aria-hidden>
                             $
                         </span>
@@ -157,36 +110,18 @@ function BookingCard({
                         <dd className="font-semibold text-ss-ink">
                             {formatMoney(booking.total)}
                             <span className="font-normal text-ss-muted"> total</span>
-=======
-                        <span className="w-4 shrink-0 text-center font-semibold text-[#FF5A1F]" aria-hidden>
-                            $
-                        </span>
-                        <dt className="sr-only">Total</dt>
-                        <dd className="font-semibold text-[#1b1b1a]">
-                            {formatMoney(booking.total)}
-                            <span className="font-normal text-[#7a776f]"> total</span>
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         </dd>
                     </div>
                 </dl>
 
                 {booking.note && (
-<<<<<<< HEAD
                     <p className="mt-3 line-clamp-2 rounded-lg bg-ss-bg px-3 py-2 text-[13px] text-ss-soft">
-=======
-                    <p className="mt-3 line-clamp-2 rounded-lg bg-[#f7f5f1] px-3 py-2 text-[13px] text-[#4d4a45]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         Your note: {booking.note}
                     </p>
                 )}
 
-<<<<<<< HEAD
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-ss-line pt-4">
                     <p className="text-xs text-ss-muted">
-=======
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#e7e3db] pt-4">
-                    <p className="text-xs text-[#8f8c85]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         Requested{" "}
                         {new Date(booking.createdAt).toLocaleDateString("en-US", {
                             month: "short",
@@ -198,11 +133,7 @@ function BookingCard({
                         <button
                             type="button"
                             onClick={() => onRequestCancel(booking)}
-<<<<<<< HEAD
                             className="rounded-xl border border-red-200 bg-ss-surface px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-=======
-                            className="rounded-xl border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         >
                             Cancel Booking
                         </button>
@@ -264,7 +195,6 @@ function CancelConfirmDialog({
         >
             <Dialog.Portal>
                 <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/50" />
-<<<<<<< HEAD
                 <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-ss-surface p-6 shadow-2xl outline-none">
                     <Dialog.Title className="text-xl font-semibold tracking-tight text-ss-ink">
                         Cancel this booking?
@@ -274,17 +204,6 @@ function CancelConfirmDialog({
                             <>
                                 Your request for{" "}
                                 <span className="font-medium text-ss-ink">{booking.studioTitle}</span>{" "}
-=======
-                <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-6 shadow-2xl outline-none">
-                    <Dialog.Title className="text-xl font-semibold tracking-tight text-[#1b1b1a]">
-                        Cancel this booking?
-                    </Dialog.Title>
-                    <Dialog.Description className="mt-2 text-sm leading-relaxed text-[#7a776f]">
-                        {booking ? (
-                            <>
-                                Your request for{" "}
-                                <span className="font-medium text-[#1b1b1a]">{booking.studioTitle}</span>{" "}
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                                 on {formatBookingDate(booking.date)} ({booking.startTime} –{" "}
                                 {booking.endTime}) will be cancelled and the time slot released.
                             </>
@@ -303,11 +222,7 @@ function CancelConfirmDialog({
                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
                         <Dialog.Close
                             disabled={submitting}
-<<<<<<< HEAD
                             className="rounded-xl border border-ss-line bg-ss-surface py-3 text-sm font-medium transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:opacity-60"
-=======
-                            className="rounded-xl border border-[#e7e3db] bg-white py-3 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 disabled:opacity-60"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         >
                             Keep booking
                         </Dialog.Close>
@@ -332,11 +247,7 @@ function BookingsSkeleton() {
             {[0, 1, 2].map((i) => (
                 <div
                     key={i}
-<<<<<<< HEAD
                     className="h-44 animate-pulse rounded-2xl border border-ss-line bg-ss-surface"
-=======
-                    className="h-44 animate-pulse rounded-2xl border border-[#e7e3db] bg-white"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                 />
             ))}
         </div>
@@ -384,51 +295,31 @@ export default function MyBookingsPage() {
 
     if (loading || !user) {
         return (
-<<<<<<< HEAD
             <div className="grid min-h-screen place-items-center bg-ss-bg text-sm text-ss-muted">
-=======
-            <div className="grid min-h-screen place-items-center bg-[#f7f5f1] text-sm text-[#7a776f]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                 Checking your account…
             </div>
         );
     }
 
     return (
-<<<<<<< HEAD
         <main className="flex-1 bg-ss-bg text-ss-ink">
             <div className="mx-auto max-w-5xl px-5 pb-20 pt-10 sm:px-8">
                 <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
                     <div>
                         <p className="text-xs font-medium tracking-wide text-brand">
-=======
-        <main className="flex-1 bg-[#f7f5f1] text-[#1b1b1a]">
-            <div className="mx-auto max-w-5xl px-5 pb-20 pt-10 sm:px-8">
-                <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
-                    <div>
-                        <p className="text-xs font-medium tracking-wide text-[#FF5A1F]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                             Your account / My bookings
                         </p>
                         <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
                             Your bookings.
                         </h1>
-<<<<<<< HEAD
                         <p className="mt-2 max-w-xl text-[15px] text-ss-muted">
-=======
-                        <p className="mt-2 max-w-xl text-[15px] text-[#7a776f]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                             Every workspace you&apos;ve reserved with {user.email}. Pending requests can be
                             cancelled any time before the host confirms them.
                         </p>
                     </div>
                     <Link
                         href="/studios"
-<<<<<<< HEAD
                         className="rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2"
-=======
-                        className="rounded-xl bg-[#FF5A1F] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                     >
                         Explore studios
                     </Link>
@@ -446,28 +337,16 @@ export default function MyBookingsPage() {
                         </p>
                     </div>
                 ) : bookings.length === 0 ? (
-<<<<<<< HEAD
                     <div className="rounded-2xl border border-ss-line bg-ss-surface px-6 py-16 text-center">
                         <h2 className="text-xl font-semibold tracking-tight text-ss-ink">
                             No bookings yet.
                         </h2>
                         <p className="mt-2 text-sm text-ss-muted">
-=======
-                    <div className="rounded-2xl border border-[#e7e3db] bg-white px-6 py-16 text-center">
-                        <h2 className="text-xl font-semibold tracking-tight text-[#1b1b1a]">
-                            No bookings yet.
-                        </h2>
-                        <p className="mt-2 text-sm text-[#7a776f]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                             Find a space you love and your reservation will show up here.
                         </p>
                         <Link
                             href="/studios"
-<<<<<<< HEAD
                             className="mt-6 inline-block rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
-=======
-                            className="mt-6 inline-block rounded-xl bg-[#FF5A1F] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15]"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                         >
                             Explore studios
                         </Link>

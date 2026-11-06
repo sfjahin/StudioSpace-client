@@ -13,11 +13,7 @@ import {
     SERVICE_FEE_RATE,
     type Studio,
 } from "@/lib/api";
-<<<<<<< HEAD
 import { useAuth } from "@/lib/auth-client";
-=======
-import { useAuth } from "@/lib/auth";
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
 import { cn } from "cn";
 
 const MIN_HOURS = 2;
@@ -285,15 +281,9 @@ export default function BookingCard({ studio }: Props) {
                                 <Dialog.Title className="mt-4 text-xl font-semibold tracking-tight text-ss-ink">
                                     Request sent to the host
                                 </Dialog.Title>
-<<<<<<< HEAD
                                 <Dialog.Description className="mt-2 text-sm leading-relaxed text-ss-muted">
                                     Your booking request for {studio.title} is saved with the
                                     status <span className="font-medium text-ss-ink">Pending</span>.
-=======
-                                <Dialog.Description className="mt-2 text-sm leading-relaxed text-[#7a776f]">
-                                    Your booking request for {studio.title} is saved with the
-                                    status <span className="font-medium text-[#1b1b1a]">Pending</span>.
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                                     You can follow it, or cancel it while it&apos;s pending, from My
                                     Bookings.
                                 </Dialog.Description>
@@ -301,21 +291,13 @@ export default function BookingCard({ studio }: Props) {
                                     <button
                                         type="button"
                                         onClick={() => closeAndReset(false)}
-<<<<<<< HEAD
                                         className="rounded-xl border border-ss-line bg-ss-surface py-3 text-sm font-medium transition-colors hover:bg-ss-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
-=======
-                                        className="rounded-xl border border-[#e7e3db] bg-white py-3 text-sm font-medium transition-colors hover:bg-[#f3f0ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                                     >
                                         Back to studio
                                     </button>
                                     <Link
                                         href="/my-bookings"
-<<<<<<< HEAD
                                         className="rounded-xl bg-brand py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2"
-=======
-                                        className="rounded-xl bg-[#FF5A1F] py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                                     >
                                         View my bookings
                                     </Link>
@@ -350,13 +332,8 @@ export default function BookingCard({ studio }: Props) {
                                     </p>
                                     <dl className="mt-3 space-y-1.5 text-[13px]">
                                         <div className="flex justify-between">
-<<<<<<< HEAD
                                             <dt className="text-ss-muted">Date</dt>
                                             <dd className="font-medium text-ss-ink">
-=======
-                                            <dt className="text-[#7a776f]">Date</dt>
-                                            <dd className="font-medium text-[#1b1b1a]">
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                                                 {formatBookingDate(date)}
                                             </dd>
                                         </div>
@@ -396,11 +373,7 @@ export default function BookingCard({ studio }: Props) {
                                             type="text"
                                             readOnly
                                             value={user?.name ?? ""}
-<<<<<<< HEAD
                                             className={cn(fieldInput, "cursor-not-allowed text-ss-muted")}
-=======
-                                            className={cn(fieldInput, "cursor-not-allowed text-[#6f6c66]")}
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                                         />
                                     </label>
                                     <label className={fieldBox}>
@@ -409,11 +382,7 @@ export default function BookingCard({ studio }: Props) {
                                             type="email"
                                             readOnly
                                             value={user?.email ?? ""}
-<<<<<<< HEAD
                                             className={cn(fieldInput, "cursor-not-allowed text-ss-muted")}
-=======
-                                            className={cn(fieldInput, "cursor-not-allowed text-[#6f6c66]")}
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                                         />
                                     </label>
                                     <label className={fieldBox}>
@@ -431,11 +400,7 @@ export default function BookingCard({ studio }: Props) {
                                     <button
                                         type="submit"
                                         disabled={!canBook || submitting}
-<<<<<<< HEAD
                                         className="w-full rounded-xl bg-brand py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2 disabled:opacity-50"
-=======
-                                        className="w-full rounded-xl bg-[#FF5A1F] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#e84e15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F]/40 focus-visible:ring-offset-2 disabled:opacity-50"
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                                     >
                                         {submitting ? "Sending…" : "Send booking request"}
                                     </button>

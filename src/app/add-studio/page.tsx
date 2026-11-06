@@ -10,11 +10,7 @@ import {
     formatMoney,
     priceBreakdown,
 } from "@/lib/api";
-<<<<<<< HEAD
 import { useAuth } from "@/lib/auth-client";
-=======
-import { useAuth } from "@/lib/auth";
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
 import ImageUploadField from "@/components/ImageUploadField";
 
 /* --------------------------------- Data ---------------------------------- */
@@ -438,7 +434,6 @@ return (
                         </Field>
 
                         <div className="grid gap-4 sm:grid-cols-2">
-<<<<<<< HEAD
                             <label className="block rounded-xl border border-ss-line bg-ss-hover px-4 pb-3 pt-3">
                                 <span className="block text-[11px] font-medium text-ss-muted">Your name (from your account)</span>
                                 <input readOnly value={user.name} className={`${inputCls} cursor-not-allowed text-ss-muted`} />
@@ -446,15 +441,6 @@ return (
                             <label className="block rounded-xl border border-ss-line bg-ss-hover px-4 pb-3 pt-3">
                                 <span className="block text-[11px] font-medium text-ss-muted">Your email (from your account)</span>
                                 <input readOnly value={user.email} className={`${inputCls} cursor-not-allowed text-ss-muted`} />
-=======
-                            <label className="block rounded-xl border border-[#e7e3db] bg-[#f3f0ea] px-4 pb-3 pt-3">
-                                <span className="block text-[11px] font-medium text-[#6f6c66]">Your name (from your account)</span>
-                                <input readOnly value={user.name} className={`${inputCls} cursor-not-allowed text-[#6f6c66]`} />
-                            </label>
-                            <label className="block rounded-xl border border-[#e7e3db] bg-[#f3f0ea] px-4 pb-3 pt-3">
-                                <span className="block text-[11px] font-medium text-[#6f6c66]">Your email (from your account)</span>
-                                <input readOnly value={user.email} className={`${inputCls} cursor-not-allowed text-[#6f6c66]`} />
->>>>>>> 6a0b7a52d7fcf34f22d7a10e3b9bfa737da6529f
                             </label>
                         </div>
                     </Section>
