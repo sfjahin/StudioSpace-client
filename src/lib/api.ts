@@ -109,14 +109,23 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     );
   }
 
-  const body = (await res.json().catch(() => null)) as (T & ErrorBody) | null;
+  // Read as text first so a non-JSON error page (an old/misconfigured API
+  // server, a proxy, Express's default 404, …) still yields a useful message
+  // instead of the generic "Something went wrong".
+  const raw = await res.text().catch(() => "");
+  let body: (T & ErrorBody) | null = null;
+  try {
+    body = raw ? (JSON.parse(raw) as T & ErrorBody) : null;
+  } catch {
+    body = null;
+  }
 
   if (!res.ok) {
-    throw new ApiError(
-      body?.message ?? "Something went wrong. Please try again.",
-      res.status,
-      body?.fields ?? {}
-    );
+    const fallback =
+      res.status === 404
+        ? `The API server did not recognise ${path}. Make sure the latest StudioSpace API server is running.`
+        : "Something went wrong. Please try again.";
+    throw new ApiError(body?.message ?? fallback, res.status, body?.fields ?? {});
   }
 
   return body as T;
