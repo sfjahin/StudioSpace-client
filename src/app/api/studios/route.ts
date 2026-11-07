@@ -1,5 +1,22 @@
 import { getAuthFromRequest } from "@/lib/server/auth-jwt";
-import { createStudioForUser } from "@/lib/server/studios";
+import { createStudioForUser, listStudiosForApi } from "@/lib/server/studios";
+
+/** List studios. Supports ?ownerEmail=, ?category= and ?limit=. */
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const ownerEmail = searchParams.get("ownerEmail")?.trim() || undefined;
+  const category = searchParams.get("category")?.trim() || undefined;
+  const rawLimit = Number.parseInt(searchParams.get("limit") ?? "", 10);
+  const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? rawLimit : undefined;
+
+  try {
+    const studios = await listStudiosForApi({ ownerEmail, category, limit });
+    return Response.json({ studios });
+  } catch (err) {
+    console.error("Failed to list studios:", err);
+    return Response.json({ message: "We couldn't load studios." }, { status: 500 });
+  }
+}
 
 /** Create a studio. Requires a valid JWT in the HTTPOnly cookie. */
 export async function POST(request: Request) {

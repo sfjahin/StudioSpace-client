@@ -167,17 +167,17 @@ export async function listStudios(
   if (opts.limit) qs.set("limit", String(opts.limit));
   if (opts.category) qs.set("category", opts.category);
   const query = qs.size ? `?${qs}` : "";
-  const data = await request<{ studios: Studio[] }>(`/studios${query}`);
+  const data = await request<{ studios: Studio[] }>(`/api/studios${query}`);
   return data.studios ?? [];
 }
 
 export function getStudio(id: string): Promise<Studio> {
-  return request<Studio>(`/studios/${encodeURIComponent(id)}`);
+  return request<Studio>(`/api/studios/${encodeURIComponent(id)}`);
 }
 
 /** Replace an existing listing's editable fields (host info stays untouched). */
 export function updateStudio(id: string, input: StudioInput): Promise<Studio> {
-  return request<Studio>(`/studios/${encodeURIComponent(id)}`, {
+  return request<Studio>(`/api/studios/${encodeURIComponent(id)}`, {
     method: "PUT",
     body: JSON.stringify(input),
   });

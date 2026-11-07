@@ -23,7 +23,7 @@ StudioSpace is a peer-to-peer marketplace where creators discover, compare and b
 - **Database:** MongoDB (native driver, shared client)
 - **Media:** imgbb browser uploads
 - **Deployment:** Vercel
-- **Companion API:** an Express 5 + MongoDB server serves studio reads and host/booking queries through `NEXT_PUBLIC_API_URL`; mutations run in this app's `/api` route handlers.
+- **API:** Next.js route handlers serve studio reads, studio CRUD and booking creation from MongoDB; a companion Express 5 API (`NEXT_PUBLIC_API_URL`) supplies booking list/status queries.
 
 ## Local setup
 
@@ -33,6 +33,7 @@ StudioSpace is a peer-to-peer marketplace where creators discover, compare and b
 git clone https://github.com/sfjahin/StudioSpace.git
 cd StudioSpace
 npm ci
+npm run seed     # one demo studio for each of the five featured categories
 ```
 
 Create `.env.local` in the project root:
@@ -73,7 +74,7 @@ Use this account on the live site (and locally against the same database):
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Host & guest | `examiner@studiospace.dev` | `Examiner123` |
+| Host & guest | `wagajer251@en2ch.com` | `MayaChan123` |
 
 The same account can act as both host and guest. Suggested walkthrough:
 

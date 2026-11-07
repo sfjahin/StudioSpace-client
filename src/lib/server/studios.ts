@@ -112,6 +112,39 @@ export function toStudio(doc: StudioDocument): Studio {
   return out;
 }
 
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** List studios for the Explore page and home page (optionally filtered). */
+export async function listStudiosForApi(
+  opts: { ownerEmail?: string; limit?: number; category?: string } = {}
+): Promise<Studio[]> {
+  const filter: Record<string, unknown> = {};
+
+  if (opts.ownerEmail) {
+    filter.ownerEmail = { $regex: `^${escapeRegex(opts.ownerEmail)}$`, $options: "i" };
+  }
+  if (opts.category) {
+    filter.category = opts.category;
+  }
+
+  let cursor = studiosCollection().find(filter).sort({ createdAt: -1 });
+  if (opts.limit && Number.isFinite(opts.limit) && opts.limit > 0) {
+    cursor = cursor.limit(Math.trunc(opts.limit));
+  }
+
+  const docs = await cursor.toArray();
+  return docs.map((doc) => toStudio(doc as StudioDocument));
+}
+
+/** Load one studio by its Mongo id, or null when it doesn't exist. */
+export async function getStudioForApi(id: string): Promise<Studio | null> {
+  if (!OBJECT_ID.test(id)) return null;
+  const doc = await studiosCollection().findOne({ _id: new ObjectId(id) });
+  return doc ? toStudio(doc as StudioDocument) : null;
+}
+
 export async function createStudioForUser(
   body: unknown,
   owner: { name: string; email: string }
@@ -134,6 +167,51 @@ export async function createStudioForUser(
   } catch (err) {
     console.error("Failed to insert studio:", err);
     return { ok: false, status: 500, message: "We couldn't save your studio. Please try again." };
+  }
+}
+
+export async function updateStudioForUser(
+  id: string,
+  body: unknown,
+  owner: { name: string; email: string }
+): Promise<MutationResult<Studio>> {
+  if (!OBJECT_ID.test(id)) {
+    return { ok: false, status: 404, message: "Studio not found." };
+  }
+
+  const { fields, value } = validateStudioInput(body);
+  if (Object.keys(fields).length > 0) {
+    return { ok: false, status: 400, message: "Some fields need attention.", fields };
+  }
+
+  try {
+    const doc = (await studiosCollection().findOne({
+      _id: new ObjectId(id),
+    })) as StudioDocument | null;
+
+    if (!doc) {
+      return { ok: false, status: 404, message: "Studio not found." };
+    }
+
+    const ownerEmail = String(doc.ownerEmail ?? doc.hostEmail ?? "");
+    if (!ownerEmail || ownerEmail.toLowerCase() !== owner.email.toLowerCase()) {
+      return {
+        ok: false,
+        status: 403,
+        message: "Only the host who created this listing can edit it.",
+      };
+    }
+
+    const updatedAt = new Date();
+    await studiosCollection().updateOne({ _id: doc._id }, { $set: { ...value, updatedAt } });
+
+    return {
+      ok: true,
+      data: toStudio({ ...doc, ...value, updatedAt }),
+    };
+  } catch (err) {
+    console.error("Failed to update studio:", err);
+    return { ok: false, status: 500, message: "We couldn't update your studio. Please try again." };
   }
 }
 
