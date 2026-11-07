@@ -7,7 +7,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import AuthShell from "@/components/AuthShell";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
-import { authClient } from "@/lib/auth-client";
+import { authClient, syncAuthJwt } from "@/lib/auth-client";
 import { safeNext } from "@/lib/redirect";
 
 const fieldBox =
@@ -47,6 +47,15 @@ export default function LoginForm() {
 
       if (authError) {
         const message = authError.message ?? "That email and password don't match.";
+        setError(message);
+        toast.error(message);
+        return;
+      }
+
+      // Exchange the Better Auth session for the HTTPOnly JWT used by
+      // protected mutations (create studio, delete studio, create booking).
+      if (!(await syncAuthJwt(true))) {
+        const message = "We couldn't finish signing you in. Please try again.";
         setError(message);
         toast.error(message);
         return;

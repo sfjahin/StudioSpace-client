@@ -93,20 +93,40 @@ export class ApiError extends Error {
 
 type ErrorBody = { message?: string; fields?: Record<string, string> };
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+/** Mutations under /api/* live in this Next app; everything else is the Express API. */
+function isLocalApiPath(path: string) {
+  return path.startsWith("/api/");
+}
+
+async function request<T>(path: string, init?: RequestInit, retried = false): Promise<T> {
   let res: Response;
 
   try {
-    res = await fetch(`${API_BASE_URL}${path}`, {
+    res = await fetch(isLocalApiPath(path) ? path : `${API_BASE_URL}${path}`, {
       ...init,
       headers: { "Content-Type": "application/json", ...init?.headers },
       cache: "no-store",
+      credentials: isLocalApiPath(path) ? "same-origin" : "omit",
     });
   } catch {
     throw new ApiError(
       "We couldn't reach the StudioSpace server. Make sure it's running and try again.",
       0
     );
+  }
+
+  // A page reload or OAuth redirect can briefly leave the session cookie without
+  // the JWT. Exchange it once, then retry the protected mutation.
+  if (res.status === 401 && isLocalApiPath(path) && !retried) {
+    const synced = await fetch("/api/auth/jwt", {
+      method: "POST",
+      credentials: "same-origin",
+      cache: "no-store",
+    })
+      .then((sync) => sync.ok)
+      .catch(() => false);
+
+    if (synced) return request<T>(path, init, true);
   }
 
   // Read as text first so a non-JSON error page (an old/misconfigured API
@@ -132,7 +152,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export function createStudio(input: StudioInput): Promise<Studio> {
-  return request<Studio>("/add-studio", {
+  return request<Studio>("/api/studios", {
     method: "POST",
     body: JSON.stringify(input),
   });
@@ -163,17 +183,17 @@ export function updateStudio(id: string, input: StudioInput): Promise<Studio> {
   });
 }
 
-/** Permanently delete a listing. */
+/** Permanently delete a listing (owner only, JWT-protected). */
 export function deleteStudio(id: string): Promise<{ id: string; deleted: boolean }> {
   return request<{ id: string; deleted: boolean }>(
-    `/studios/${encodeURIComponent(id)}`,
+    `/api/studios/${encodeURIComponent(id)}`,
     { method: "DELETE" }
   );
 }
 
-/** Create a booking. The server prices it and always starts it as "Pending". */
+/** Create a booking (JWT-protected). The server prices it and starts it as "Pending". */
 export function createBooking(input: BookingInput): Promise<Booking> {
-  return request<Booking>("/bookings", {
+  return request<Booking>("/api/bookings", {
     method: "POST",
     body: JSON.stringify(input),
   });

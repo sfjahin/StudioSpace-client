@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ChevronDown, LayoutDashboard, LogOut, Menu, Moon, PlusCircle, Sun, X, CalendarCheck, Building2 } from "lucide-react";
-import { useAuth, authClient } from "@/lib/auth-client";
+import { useAuth, authClient, clearAuthJwt } from "@/lib/auth-client";
 import { useTheme } from "@/components/ThemeProvider";
 
 const navLinks = [
@@ -56,6 +56,7 @@ export default function Navbar() {
         toast.error(error.message ?? "We couldn't log you out. Please try again.");
         return;
       }
+      await clearAuthJwt();
       toast.success("You've been logged out.");
       router.replace("/");
       router.refresh();
