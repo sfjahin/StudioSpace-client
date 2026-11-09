@@ -1,5 +1,12 @@
 import { ObjectId } from "mongodb";
-import { SERVICE_FEE_RATE, type Booking, type Studio } from "@/lib/api";
+import { io } from "next/cache";
+import {
+  BOOKING_STATUSES,
+  SERVICE_FEE_RATE,
+  type Booking,
+  type BookingStatus,
+  type Studio,
+} from "@/lib/api";
 import { bookingsCollection, studiosCollection } from "@/lib/server/db";
 import { OBJECT_ID, toStudio, type MutationResult } from "@/lib/server/studios";
 
@@ -185,3 +192,152 @@ export async function createBookingForUser(
     return { ok: false, status: 500, message: "We couldn't save your booking. Please try again." };
   }
 }
+
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** Bookings made by a guest (`userEmail`) or for a host's studios (`ownerEmail`), newest first. */
+export async function listBookingsForApi(
+  opts: { userEmail?: string; ownerEmail?: string } = {}
+): Promise<Booking[]> {
+  // Keep MongoDB reads out of the static shell, see listStudiosForApi.
+  await io();
+
+  const filter: Record<string, unknown> = {};
+
+  if (opts.userEmail) {
+    filter.userEmail = { $regex: `^${escapeRegex(opts.userEmail)}$`, $options: "i" };
+  }
+  if (opts.ownerEmail) {
+    filter.ownerEmail = { $regex: `^${escapeRegex(opts.ownerEmail)}$`, $options: "i" };
+  }
+
+  const docs = await bookingsCollection().find(filter).sort({ createdAt: -1 }).toArray();
+  return docs.map((doc) => toBooking(doc as BookingDocument));
+}
+
+/** A guest may cancel their own booking while it is still pending. */
+export async function cancelBookingForUser(
+  id: string,
+  userEmail: string
+): Promise<MutationResult<Booking>> {
+  if (!OBJECT_ID.test(id)) {
+    return { ok: false, status: 404, message: "Booking not found." };
+  }
+
+  try {
+    const doc = (await bookingsCollection().findOne({
+      _id: new ObjectId(id),
+    })) as BookingDocument | null;
+
+    if (!doc) {
+      return { ok: false, status: 404, message: "Booking not found." };
+    }
+
+    if (String(doc.userEmail ?? "").toLowerCase() !== userEmail.toLowerCase()) {
+      return {
+        ok: false,
+        status: 403,
+        message: "Only the guest who made this booking can cancel it.",
+      };
+    }
+
+    if (doc.status !== "Pending") {
+      return {
+        ok: false,
+        status: 409,
+        message: "Only pending bookings can be cancelled. Contact the host instead.",
+      };
+    }
+
+    const updatedAt = new Date();
+    await bookingsCollection().updateOne(
+      { _id: doc._id },
+      { $set: { status: "Cancelled", updatedAt } }
+    );
+
+    return { ok: true, data: toBooking({ ...doc, status: "Cancelled", updatedAt }) };
+  } catch (err) {
+    console.error("Failed to cancel booking:", err);
+    return { ok: false, status: 500, message: "We couldn't cancel that booking. Please try again." };
+  }
+}
+
+const STATUS_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
+  Pending: ["Confirmed", "Cancelled"],
+  Confirmed: ["Completed", "Cancelled"],
+  Completed: [],
+  Cancelled: [],
+};
+
+/** A host moves a booking along its lifecycle; identity comes from the JWT. */
+export async function updateBookingStatusForUser(
+  id: string,
+  ownerEmail: string,
+  status: string
+): Promise<MutationResult<Booking>> {
+  if (!OBJECT_ID.test(id)) {
+    return { ok: false, status: 404, message: "Booking not found." };
+  }
+  if (!BOOKING_STATUSES.includes(status as BookingStatus)) {
+    return { ok: false, status: 400, message: "Unknown booking status." };
+  }
+  const next = status as BookingStatus;
+
+  try {
+    const doc = (await bookingsCollection().findOne({
+      _id: new ObjectId(id),
+    })) as BookingDocument | null;
+
+    if (!doc) {
+      return { ok: false, status: 404, message: "Booking not found." };
+    }
+
+    const docOwner = String(doc.ownerEmail ?? "");
+    if (!docOwner || docOwner.toLowerCase() !== ownerEmail.toLowerCase()) {
+      return {
+        ok: false,
+        status: 403,
+        message: "Only the host for this studio can update its bookings.",
+      };
+    }
+
+    const current = doc.status as BookingStatus;
+    if (!STATUS_TRANSITIONS[current]?.includes(next)) {
+      return {
+        ok: false,
+        status: 409,
+        message: `A ${String(current).toLowerCase()} booking can't be marked ${next.toLowerCase()}.`,
+      };
+    }
+
+    if (next === "Confirmed") {
+      const clash = await findConfirmedOverlap({
+        studioId: String(doc.studioId),
+        date: String(doc.date),
+        startTime: String(doc.startTime),
+        endTime: String(doc.endTime),
+      });
+      if (clash) {
+        return { ok: false, status: 409, message: slotTakenMessage(clash) };
+      }
+    }
+
+    const updatedAt = new Date();
+    await bookingsCollection().updateOne(
+      { _id: doc._id },
+      { $set: { status: next, updatedAt } }
+    );
+
+    return { ok: true, data: toBooking({ ...doc, status: next, updatedAt }) };
+  } catch (err) {
+    console.error("Failed to update booking status:", err);
+    return {
+      ok: false,
+      status: 500,
+      message: "We couldn't update that booking. Please try again.",
+    };
+  }
+}
+

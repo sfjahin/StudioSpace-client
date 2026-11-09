@@ -202,14 +202,14 @@ export function createBooking(input: BookingInput): Promise<Booking> {
 /** Every booking made by this user, newest first. */
 export async function listMyBookings(email: string): Promise<Booking[]> {
   const data = await request<{ bookings: Booking[] }>(
-    `/bookings?email=${encodeURIComponent(email)}`
+    `/api/bookings?email=${encodeURIComponent(email)}`
   );
   return data.bookings ?? [];
 }
 
 /** Cancel one of the user's own bookings (only allowed while it is Pending). */
 export function cancelBooking(id: string, userEmail: string): Promise<Booking> {
-  return request<Booking>(`/bookings/${encodeURIComponent(id)}/cancel`, {
+  return request<Booking>(`/api/bookings/${encodeURIComponent(id)}/cancel`, {
     method: "PATCH",
     body: JSON.stringify({ userEmail }),
   });
@@ -218,7 +218,7 @@ export function cancelBooking(id: string, userEmail: string): Promise<Booking> {
 /** Bookings other people made for this host's studios. */
 export async function listHostBookings(ownerEmail: string): Promise<Booking[]> {
   const data = await request<{ bookings: Booking[] }>(
-    `/bookings?ownerEmail=${encodeURIComponent(ownerEmail)}`
+    `/api/bookings?ownerEmail=${encodeURIComponent(ownerEmail)}`
   );
   return data.bookings ?? [];
 }
@@ -229,7 +229,7 @@ export function updateBookingStatus(
   ownerEmail: string,
   status: BookingStatus
 ): Promise<Booking> {
-  return request<Booking>(`/bookings/${encodeURIComponent(id)}/status`, {
+  return request<Booking>(`/api/bookings/${encodeURIComponent(id)}/status`, {
     method: "PATCH",
     body: JSON.stringify({ ownerEmail, status }),
   });

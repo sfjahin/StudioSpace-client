@@ -23,7 +23,7 @@ StudioSpace is a peer-to-peer marketplace where creators discover, compare and b
 - **Database:** MongoDB (native driver, shared client)
 - **Media:** imgbb browser uploads
 - **Deployment:** Vercel
-- **API:** Next.js route handlers serve studio reads, studio CRUD and booking creation from MongoDB; a companion Express 5 API (`NEXT_PUBLIC_API_URL`) supplies booking list/status queries.
+- **API:** Next.js route handlers serve studio reads/CRUD plus booking create, list, cancel and status changes from MongoDB.
 
 ## Local setup
 
@@ -50,10 +50,9 @@ JWT_SECRET=replace-with-a-long-random-string   # falls back to BETTER_AUTH_SECRE
 GOOGLE_CLIENT_ID=...                   # enables Google sign-in
 GOOGLE_CLIENT_SECRET=...
 NEXT_PUBLIC_IMGBB_API_KEY=...          # enables file uploads (free key: https://api.imgbb.com)
-NEXT_PUBLIC_API_URL=http://localhost:8000      # companion Express API
 ```
 
-Start the companion Express API first (see its repository README), then run:
+Then run:
 
 ```bash
 npm run dev

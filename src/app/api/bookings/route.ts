@@ -1,5 +1,29 @@
 import { getAuthFromRequest } from "@/lib/server/auth-jwt";
-import { createBookingForUser } from "@/lib/server/bookings";
+import { createBookingForUser, listBookingsForApi } from "@/lib/server/bookings";
+
+/** List bookings. Guests see their own; hosts add `?ownerEmail=` to see requests for their studios. */
+export async function GET(request: Request) {
+  const user = await getAuthFromRequest(request);
+  if (!user) {
+    return Response.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const ownerEmail = searchParams.get("ownerEmail")?.trim();
+  if (ownerEmail && ownerEmail.toLowerCase() !== user.email.toLowerCase()) {
+    return Response.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const bookings = await listBookingsForApi(
+      ownerEmail ? { ownerEmail: user.email } : { userEmail: user.email }
+    );
+    return Response.json({ bookings });
+  } catch (err) {
+    console.error("Failed to list bookings:", err);
+    return Response.json({ message: "We couldn't load your bookings." }, { status: 500 });
+  }
+}
 
 /**
  * Create a booking. Requires a valid JWT in the HTTPOnly cookie.
