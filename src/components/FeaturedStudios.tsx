@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { listStudios, type Studio } from "@/lib/api";
+import type { Studio } from "@/lib/api";
+import { listStudiosForApi } from "@/lib/server/studios";
 import StudioCard from "@/components/StudioCard";
 
 /** Home page: the six newest studios, fetched from MongoDB (server applies .limit(6)). */
@@ -9,7 +10,7 @@ export default async function FeaturedStudios() {
   let failed = false;
 
   try {
-    studios = await listStudios({ limit: 6 });
+    studios = await listStudiosForApi({ limit: 6 });
   } catch {
     failed = true;
   }

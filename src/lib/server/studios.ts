@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { io } from "next/cache";
 import {
   CATEGORIES,
   type FieldErrors,
@@ -120,6 +121,10 @@ function escapeRegex(value: string) {
 export async function listStudiosForApi(
   opts: { ownerEmail?: string; limit?: number; category?: string } = {}
 ): Promise<Studio[]> {
+  // Keep MongoDB reads out of the static shell (the driver calls `new Date()`
+  // internally, which Next.js flags during prerendering).
+  await io();
+
   const filter: Record<string, unknown> = {};
 
   if (opts.ownerEmail) {
@@ -141,6 +146,7 @@ export async function listStudiosForApi(
 /** Load one studio by its Mongo id, or null when it doesn't exist. */
 export async function getStudioForApi(id: string): Promise<Studio | null> {
   if (!OBJECT_ID.test(id)) return null;
+  await io();
   const doc = await studiosCollection().findOne({ _id: new ObjectId(id) });
   return doc ? toStudio(doc as StudioDocument) : null;
 }

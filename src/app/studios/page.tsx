@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { listStudios, type Studio } from "@/lib/api";
+import type { Studio } from "@/lib/api";
+import { listStudiosForApi } from "@/lib/server/studios";
 import StudiosExplorer from "@/components/StudiosExplorer";
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ async function StudiosGrid() {
     let failed = false;
 
     try {
-        studios = await listStudios();
+        studios = await listStudiosForApi();
     } catch {
         studios = [];
         failed = true;

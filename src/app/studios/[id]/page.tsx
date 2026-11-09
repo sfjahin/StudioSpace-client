@@ -22,7 +22,8 @@ import {
     Wind,
     type LucideIcon,
 } from "lucide-react";
-import { ApiError, formatMoney, getStudio, type Studio } from "@/lib/api";
+import { formatMoney, type Studio } from "@/lib/api";
+import { getStudioForApi } from "@/lib/server/studios";
 import {
     averageRating,
     buildGallery,
@@ -110,12 +111,11 @@ function amenityIcon(name: string): LucideIcon {
 /* --------------------------------- Page ---------------------------------- */
 
 async function StudioDetail({ id }: { id: string }) {
-    let studio: Studio;
+    let studio: Studio | null;
 
     try {
-        studio = await getStudio(id);
-    } catch (err) {
-        if (err instanceof ApiError && err.status === 404) notFound();
+        studio = await getStudioForApi(id);
+    } catch {
         return (
             <div className="rounded-2xl border border-red-300 bg-red-50 px-6 py-10 text-center">
                 <p className="text-sm font-medium text-red-800">We couldn&apos;t load this studio right now.</p>
@@ -125,6 +125,8 @@ async function StudioDetail({ id }: { id: string }) {
             </div>
         );
     }
+
+    if (!studio) notFound();
 
     const gallery = buildGallery(studio);
     const reviews = buildReviews(studio);
