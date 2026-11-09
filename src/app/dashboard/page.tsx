@@ -76,7 +76,7 @@ export default function DashboardPage() {
     <main className="flex-1 bg-ss-bg">
       <div className="mx-auto max-w-6xl px-6 py-12">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">Dashboard</p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight text-ss-ink">Welcome back, {user?.name.split(" ")[0]}.</h1>
+        <h1 className="mt-3 break-words text-3xl font-bold tracking-tight text-ss-ink sm:text-4xl">Welcome back, {user?.name.split(" ")[0]}.</h1>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map(({ label, value, icon: Icon, href }) => (
@@ -112,7 +112,7 @@ export default function DashboardPage() {
                     </p>
                     <p className="mt-1 text-sm font-medium text-ss-ink">{formatMoney(b.total)}</p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${BADGE[b.status]}`}>{b.status}</span>
                     {busyId === b.id ? (
                       <Loader2 className="size-4 animate-spin text-ss-muted" />

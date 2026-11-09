@@ -50,6 +50,7 @@ export default function Navbar() {
 
   async function handleLogout() {
     setMenuOpen(false);
+    setMobileOpen(false);
     try {
       const { error } = await authClient.signOut();
       if (error) {
@@ -78,21 +79,21 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-ss-line bg-ss-bg/95 backdrop-blur">
-      <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2.5">
+      <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="flex min-w-0 items-center gap-2.5">
           <Image
             src="/images/Brand mark.png"
             alt="StudioSpace logo"
             width={30}
             height={30}
-            className="rounded-[8px]"
+            className="shrink-0 rounded-[8px]"
           />
-          <span className="text-lg font-bold tracking-tight text-ss-ink">
+          <span className="truncate text-base font-bold tracking-tight text-ss-ink sm:text-lg">
             StudioSpace<span className="text-brand">.</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
+        <nav className="hidden items-center gap-6 lg:flex lg:gap-8" aria-label="Main">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -109,7 +110,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           <button
             type="button"
             onClick={toggle}
@@ -126,12 +127,12 @@ export default function Navbar() {
                 onClick={() => setMenuOpen((o) => !o)}
                 aria-haspopup="menu"
                 aria-expanded={menuOpen}
-                className="flex items-center gap-2 rounded-full border border-ss-line bg-ss-surface py-1 pl-1 pr-2.5 transition-colors hover:bg-ss-hover"
+                className="flex items-center gap-2 rounded-full border border-ss-line bg-ss-surface py-1 pl-1 pr-2 transition-colors hover:bg-ss-hover sm:pr-2.5"
               >
                 <span className="flex size-8 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
                   {initials(user.name)}
                 </span>
-                <ChevronDown className="size-4 text-ss-muted" />
+                <ChevronDown className="hidden size-4 text-ss-muted sm:block" />
               </button>
 
               {menuOpen && (
@@ -182,7 +183,7 @@ export default function Navbar() {
 
           <button
             type="button"
-            className="rounded-md p-2 text-ss-ink md:hidden"
+            className="rounded-md p-2 text-ss-ink lg:hidden"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((o) => !o)}
@@ -193,11 +194,12 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <nav className="border-t border-ss-line bg-ss-bg px-6 py-3 md:hidden" aria-label="Mobile">
+        <nav className="border-t border-ss-line bg-ss-bg px-4 py-3 sm:px-6 lg:hidden" aria-label="Mobile">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => setMobileOpen(false)}
               className={`block rounded-lg px-3 py-3 text-sm ${
                 isActive(link.href) ? "bg-ss-hover font-bold text-brand" : "text-ss-soft"
               }`}
@@ -205,16 +207,41 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          {user && (
+            <div className="mt-2 border-t border-ss-line pt-2">
+              {menuLinks.map(({ label, href, icon: Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm text-ss-soft hover:bg-ss-hover"
+                >
+                  <Icon className="size-4 text-ss-muted" />
+                  {label}
+                </Link>
+              ))}
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm text-ss-soft hover:bg-ss-hover"
+              >
+                <LogOut className="size-4 text-ss-muted" />
+                Logout
+              </button>
+            </div>
+          )}
           {!user && (
             <div className="mt-2 grid grid-cols-2 gap-3 border-t border-ss-line pt-3">
               <Link
                 href="/login"
+                onClick={() => setMobileOpen(false)}
                 className="rounded-lg border border-ss-line px-4 py-3 text-center text-sm font-medium text-ss-ink"
               >
                 Login
               </Link>
               <Link
                 href="/register"
+                onClick={() => setMobileOpen(false)}
                 className="rounded-lg bg-brand px-4 py-3 text-center text-sm font-medium text-white"
               >
                 Register

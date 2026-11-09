@@ -16,21 +16,21 @@ const navLinks = [
 export default function NavbarFallback() {
   return (
     <header className="sticky top-0 z-50 border-b border-ss-line bg-ss-bg/95 backdrop-blur">
-      <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2.5">
+      <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="flex min-w-0 items-center gap-2.5">
           <Image
             src="/images/Brand mark.png"
             alt="StudioSpace logo"
             width={30}
             height={30}
-            className="rounded-[8px]"
+            className="shrink-0 rounded-[8px]"
           />
-          <span className="text-lg font-bold tracking-tight text-ss-ink">
+          <span className="truncate text-base font-bold tracking-tight text-ss-ink sm:text-lg">
             StudioSpace<span className="text-brand">.</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
+        <nav className="hidden items-center gap-6 lg:flex lg:gap-8" aria-label="Main">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -42,7 +42,7 @@ export default function NavbarFallback() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           <span className="size-9" aria-hidden />
           <div className="hidden items-center gap-4 sm:flex">
             <Link href="/login" className="text-sm font-medium text-ss-soft hover:text-ss-ink">

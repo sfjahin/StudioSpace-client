@@ -28,8 +28,8 @@ export default function NewsletterSection() {
         </div>
 
         <form onSubmit={handleSubmit} noValidate={false}>
-          <div className="flex items-center gap-3">
-            <div className="flex-1 rounded-xl border border-zinc-200 bg-ss-surface px-4 py-3 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="min-w-0 flex-1 rounded-xl border border-zinc-200 bg-ss-surface px-4 py-3 shadow-sm">
               <label
                 htmlFor="newsletter-email"
                 className="block text-xs text-zinc-500"
@@ -48,7 +48,7 @@ export default function NewsletterSection() {
             </div>
             <button
               type="submit"
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-brand px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-dark"
+              className="inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-lg bg-brand px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-dark sm:w-auto"
             >
               Count me in
               <ArrowUpRight className="h-4 w-4" />

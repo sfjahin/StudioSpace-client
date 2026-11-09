@@ -159,7 +159,7 @@ async function StudioDetail({ id }: { id: string }) {
                         <p className="inline-block rounded-md bg-[#FFF0E9] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-brand">
                             Guest favorite
                         </p>
-                        <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+                        <h1 className="mt-3 break-words text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
                             {studio.title}
                         </h1>
                         <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px] text-ss-soft">
